@@ -1,6 +1,5 @@
-package net.langreader.dao;
+package net.langreader.repository;
 
-import net.langreader.model.Language;
 import net.langreader.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

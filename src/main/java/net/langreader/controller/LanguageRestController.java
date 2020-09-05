@@ -1,8 +1,8 @@
 package net.langreader.controller;
 
-import net.langreader.dao.LangRepository;
-import net.langreader.dao.UserRepository;
-import net.langreader.dao.WordRepository;
+import net.langreader.repository.LangRepository;
+import net.langreader.repository.UserRepository;
+import net.langreader.repository.WordRepository;
 import net.langreader.model.Language;
 import net.langreader.model.User;
 import net.langreader.security.jwt.JwtUtils;

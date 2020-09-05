@@ -16,7 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -53,8 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Value("${langreader.app.httpsEnabled}")
-    private boolean isHttpsAllowed;
+    @Value("${server.ssl.enabled}")
+    private boolean isSSLEnabled;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -67,7 +66,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(
                         "/api/auth/**",
-                        "/api/mail/**",
                         "/api/langs/all",
                         "/api/home").permitAll()
                 .antMatchers(
@@ -80,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/stats/**").authenticated()
                 .anyRequest().permitAll();
 
-        if (isHttpsAllowed) {
+        if (isSSLEnabled) {
             http.requiresChannel().anyRequest().requiresSecure();
         }
 

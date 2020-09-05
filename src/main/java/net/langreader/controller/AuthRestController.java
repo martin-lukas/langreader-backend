@@ -1,16 +1,16 @@
 package net.langreader.controller;
 
 import net.langreader.security.UserDetailsImpl;
-import net.langreader.dao.RoleRepository;
-import net.langreader.dao.UserRepository;
+import net.langreader.repository.RoleRepository;
+import net.langreader.repository.UserRepository;
 import net.langreader.security.jwt.JwtUtils;
 import net.langreader.model.ERole;
 import net.langreader.model.Role;
 import net.langreader.model.User;
-import net.langreader.payload.request.SigninRequest;
-import net.langreader.payload.request.SignupRequest;
-import net.langreader.payload.response.JwtResponse;
-import net.langreader.payload.response.MessageResponse;
+import net.langreader.dto.request.SigninRequest;
+import net.langreader.dto.request.SignupRequest;
+import net.langreader.dto.response.JwtResponse;
+import net.langreader.dto.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

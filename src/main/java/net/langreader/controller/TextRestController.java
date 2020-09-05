@@ -1,7 +1,7 @@
 package net.langreader.controller;
 
-import net.langreader.dao.TextRepository;
-import net.langreader.dao.UserRepository;
+import net.langreader.repository.TextRepository;
+import net.langreader.repository.UserRepository;
 import net.langreader.model.Language;
 import net.langreader.model.Text;
 import net.langreader.model.User;

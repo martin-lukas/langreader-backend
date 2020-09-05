@@ -1,4 +1,4 @@
-package net.langreader.payload.request;
+package net.langreader.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

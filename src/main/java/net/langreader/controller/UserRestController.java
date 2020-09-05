@@ -1,8 +1,7 @@
 package net.langreader.controller;
 
-import net.langreader.dao.UserRepository;
+import net.langreader.repository.UserRepository;
 import net.langreader.model.User;
-import net.langreader.payload.request.SimpleRequest;
 import net.langreader.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

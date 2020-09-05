@@ -1,4 +1,4 @@
-package net.langreader.payload.request;
+package net.langreader.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,13 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SimpleRequest {
+public class ContactRequest {
     @NotBlank
-    private String param;
+    private String email;
+
+    @NotBlank
+    private String subject;
+
+    @NotBlank
+    private String text;
 }

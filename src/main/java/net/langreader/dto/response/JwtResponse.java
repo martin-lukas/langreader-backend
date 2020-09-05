@@ -1,4 +1,4 @@
-package net.langreader.payload.response;
+package net.langreader.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

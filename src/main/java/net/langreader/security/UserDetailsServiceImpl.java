@@ -1,6 +1,6 @@
 package net.langreader.security;
 
-import net.langreader.dao.UserRepository;
+import net.langreader.repository.UserRepository;
 import net.langreader.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
