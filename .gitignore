@@ -3,7 +3,7 @@
 *.iml
 
 # Server
-/server/target
+/target
 
 # Sensitive files
 /scripts/sql/03-mock-data.sql
