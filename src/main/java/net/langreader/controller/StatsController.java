@@ -1,12 +1,11 @@
 package net.langreader.controller;
 
-import net.langreader.repository.UserRepository;
-import net.langreader.repository.WordRepository;
 import net.langreader.model.LangStatistics;
 import net.langreader.model.Language;
 import net.langreader.model.User;
 import net.langreader.model.WordType;
-import net.langreader.security.jwt.JwtUtils;
+import net.langreader.repository.UserRepository;
+import net.langreader.repository.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -22,18 +20,15 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/stats")
-public class StatsRestController {
+public class StatsController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private WordRepository wordRepository;
-    @Autowired
-    private JwtUtils jwtUtils;
 
     @GetMapping
-    public ResponseEntity<List<LangStatistics>> getStatistics(HttpServletRequest req) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+    public ResponseEntity<List<LangStatistics>> getStatistics() {
+        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             List<LangStatistics> stats = new ArrayList<>();

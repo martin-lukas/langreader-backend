@@ -5,31 +5,26 @@ import net.langreader.repository.UserRepository;
 import net.langreader.model.Language;
 import net.langreader.model.Text;
 import net.langreader.model.User;
-import net.langreader.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/texts")
-public class TextRestController {
+public class TextController {
     @Autowired
     private TextRepository textRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private JwtUtils jwtUtils;
 
     @GetMapping
-    public ResponseEntity<List<Text>> getTextTitles(HttpServletRequest req) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+    public ResponseEntity<List<Text>> getTextTitles() {
+        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             Language chosenLang = user.getChosenLang();
@@ -50,9 +45,8 @@ public class TextRestController {
     }
 
     @GetMapping("/{textId}")
-    public ResponseEntity<Text> getText(HttpServletRequest req, @PathVariable int textId) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> user = userRepository.findByUsername(username);
+    public ResponseEntity<Text> getText(@PathVariable int textId) {
+        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
         if (user.isPresent()) {
             Optional<Text> textOpt = textRepository.findById(textId);
             if (textOpt.isPresent()) {
@@ -66,11 +60,10 @@ public class TextRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addText(HttpServletRequest req, @RequestBody Text newText) {
+    public ResponseEntity<?> addText(@RequestBody Text newText) {
         String textVal = newText.getText();
         if (textVal != null && !textVal.isEmpty()) {
-            String username = jwtUtils.getUsernameFromHttpRequest(req);
-            Optional<User> userOpt = userRepository.findByUsername(username);
+            Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
                 Language chosenLang = user.getChosenLang();
@@ -87,11 +80,10 @@ public class TextRestController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateText(HttpServletRequest req, @RequestBody Text text) {
+    public ResponseEntity<?> updateText(@RequestBody Text text) {
         String textVal = text.getText();
         if (textVal != null && !textVal.isEmpty()) {
-            String username = jwtUtils.getUsernameFromHttpRequest(req);
-            Optional<User> userOpt = userRepository.findByUsername(username);
+            Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
             if (userOpt.isPresent()) {
                 Optional<Text> foundTextOpt = textRepository.findById(text.getId());
                 if (foundTextOpt.isPresent()) {
@@ -108,9 +100,8 @@ public class TextRestController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteText(HttpServletRequest req, @RequestBody Text text) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+    public ResponseEntity<?> deleteText(@RequestBody Text text) {
+        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             if (textRepository.existsById(text.getId())) {
                 textRepository.deleteById(text.getId());
@@ -122,9 +113,8 @@ public class TextRestController {
     }
 
     @PostMapping("/batch")
-    public ResponseEntity<?> addTexts(HttpServletRequest req, @RequestBody List<Text> newTexts) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+    public ResponseEntity<?> addTexts(@RequestBody List<Text> newTexts) {
+        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             Language chosenLang = user.getChosenLang();

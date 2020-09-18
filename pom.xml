@@ -44,6 +44,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Spring Boot Devtools -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
         <!-- JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -64,34 +70,17 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Security -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <!-- JWT -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
-        </dependency>
-
         <!-- Boilerpipe - for HTML main text extraction -->
         <dependency>
             <groupId>de.l3s.boilerpipe</groupId>
             <artifactId>boilerpipe</artifactId>
             <version>1.1.0</version>
         </dependency>
-
-        <!-- Boilerpipe dependency -->
         <dependency>
             <groupId>net.sourceforge.nekohtml</groupId>
             <artifactId>nekohtml</artifactId>
             <version>1.9.22</version>
         </dependency>
-
-        <!-- Boilerpipe dependency -->
         <dependency>
             <groupId>org.eclipse.birt.runtime.3_7_1</groupId>
             <artifactId>org.apache.xerces</artifactId>
@@ -116,13 +105,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- Security test -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -132,35 +114,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-<!--            <plugin>-->
-<!--                <artifactId>maven-resources-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>copy React.js frontend content</id>-->
-<!--                        <phase>generate-resources</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>copy-resources</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <outputDirectory>src/main/resources/public</outputDirectory>-->
-<!--                            <overwrite>true</overwrite>-->
-<!--                            <resources>-->
-<!--                                <resource>-->
-<!--                                    <directory>-->
-<!--                                        ${project.parent.basedir}/client/build-->
-<!--                                    </directory>-->
-<!--                                    <includes>-->
-<!--                                        <include>index.html</include>-->
-<!--                                        <include>favicon.ico</include>-->
-<!--                                        <include>manifest.json</include>-->
-<!--                                        <include>robots.txt</include>-->
-<!--                                    </includes>-->
-<!--                                </resource>-->
-<!--                            </resources>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 </project>

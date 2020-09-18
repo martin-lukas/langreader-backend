@@ -7,7 +7,6 @@ import net.langreader.repository.LangRepository;
 import net.langreader.repository.UserRepository;
 import net.langreader.model.Language;
 import net.langreader.model.User;
-import net.langreader.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,17 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/translate")
-public class TranslationRestController {
+public class TranslationController {
     @Value("${langreader.app.googleApiKey}")
     private String googleApiKey;
-
-    @Autowired
-    private JwtUtils jwtUtils;
 
     @Autowired
     private LangRepository langRepository;
@@ -36,15 +31,12 @@ public class TranslationRestController {
     private UserRepository userRepository;
 
     @GetMapping
-    public ResponseEntity<String> getTranslation(
-            @RequestParam(value = "word") String word,
-            HttpServletRequest req) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+    public ResponseEntity<String> getTranslation(@RequestParam(value = "word") String word) {
+        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             Language chosenLang = userOpt.get().getChosenLang();
             if (chosenLang != null) {
-                Translate translate = TranslateOptions.newBuilder()
+                @SuppressWarnings("deprecation") Translate translate = TranslateOptions.newBuilder()
                         .setApiKey(googleApiKey).build().getService();
                 // for now, default is EN, and if chosen is EN, then translated to user's native
                 Language englishLang = langRepository.findByCode("EN");

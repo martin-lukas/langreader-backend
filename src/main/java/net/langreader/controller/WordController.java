@@ -5,7 +5,6 @@ import net.langreader.repository.WordRepository;
 import net.langreader.model.Language;
 import net.langreader.model.User;
 import net.langreader.model.Word;
-import net.langreader.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +17,16 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/words")
-public class WordRestController {
+public class WordController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private WordRepository wordRepository;
-    @Autowired
-    private JwtUtils jwtUtils;
 
     @PostMapping("/enrich")
     public ResponseEntity<List<Word>> enrichWords(
             HttpServletRequest req, @RequestBody List<Word> words) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             List<Word> enrichedWords = new ArrayList<>();
@@ -49,8 +45,7 @@ public class WordRestController {
 
     @PostMapping
     public ResponseEntity<?> addWord(HttpServletRequest req, @RequestBody Word newWord) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             String newWordVal = newWord.getWord();
             if (newWordVal != null && !newWordVal.isEmpty() && newWord.getType() != null) {
@@ -72,8 +67,7 @@ public class WordRestController {
 
     @PutMapping
     public ResponseEntity<?> updateWord(HttpServletRequest req, @RequestBody Word word) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             String wordVal = word.getWord();
             if (wordVal != null && !wordVal.isEmpty() && word.getType() != null) {
@@ -95,8 +89,7 @@ public class WordRestController {
 
     @DeleteMapping
     public ResponseEntity<?> deleteWord(HttpServletRequest req, @RequestBody Word word) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> userOpt = userRepository.findByUsername(username);
+        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             String wordVal = word.getWord();
             if (wordVal != null && !wordVal.isEmpty()) {

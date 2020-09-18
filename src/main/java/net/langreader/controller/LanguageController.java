@@ -5,7 +5,6 @@ import net.langreader.repository.UserRepository;
 import net.langreader.repository.WordRepository;
 import net.langreader.model.Language;
 import net.langreader.model.User;
-import net.langreader.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +18,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/langs")
-public class LanguageRestController {
+public class LanguageController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private LangRepository langRepository;
     @Autowired
     private WordRepository wordRepository;
-    @Autowired
-    private JwtUtils jwtUtils;
 
     @GetMapping("/all")
     public ResponseEntity<List<Language>> getAllLangs() {
@@ -37,9 +34,8 @@ public class LanguageRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Language>> getUserLangs(HttpServletRequest req) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> user = userRepository.findByUsername(username);
+    public ResponseEntity<List<Language>> getUserLangs() {
+        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
         if (user.isPresent()) {
             List<Language> languages = user.get().getLangs();
             return new ResponseEntity<>(languages, HttpStatus.OK);
@@ -48,9 +44,8 @@ public class LanguageRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addUserLang(HttpServletRequest req, @RequestBody Language newLang) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> foundUser = userRepository.findByUsername(username);
+    public ResponseEntity<?> addUserLang(@RequestBody Language newLang) {
+        Optional<User> foundUser = userRepository.findByUsername(UserRepository.MARTIN);
         if (foundUser.isPresent()) {
             User user = foundUser.get();
             List<Language> usersLangs = user.getLangs();
@@ -64,10 +59,8 @@ public class LanguageRestController {
     }
 
     @DeleteMapping
-    @Transactional
-    public ResponseEntity<?> removeUserLang(HttpServletRequest req, @RequestBody Language language) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> user = userRepository.findByUsername(username);
+    public ResponseEntity<?> removeUserLang(@RequestBody Language language) {
+        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
         if (user.isPresent()) {
             User foundUser = user.get();
             foundUser.removeLanguage(language);
@@ -79,9 +72,8 @@ public class LanguageRestController {
     }
 
     @GetMapping("/chosen")
-    public ResponseEntity<Language> getChosenLang(HttpServletRequest req) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> user = userRepository.findByUsername(username);
+    public ResponseEntity<Language> getChosenLang() {
+        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
         if (user.isPresent()) {
             Language chosenlanguage = user.get().getChosenLang();
             return new ResponseEntity<>(chosenlanguage, HttpStatus.OK);
@@ -90,10 +82,8 @@ public class LanguageRestController {
     }
 
     @PutMapping("/chosen")
-    public ResponseEntity<?> updateChosenLang(
-            HttpServletRequest req, @RequestBody Language newChosenLang) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> user = userRepository.findByUsername(username);
+    public ResponseEntity<?> updateChosenLang(@RequestBody Language newChosenLang) {
+        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
         if (user.isPresent()) {
             User foundUser = user.get();
             foundUser.setChosenLang(newChosenLang);
@@ -104,9 +94,8 @@ public class LanguageRestController {
     }
 
     @GetMapping("/native")
-    public ResponseEntity<Language> getNativeLang(HttpServletRequest req) {
-        String username = jwtUtils.getUsernameFromHttpRequest(req);
-        Optional<User> user = userRepository.findByUsername(username);
+    public ResponseEntity<Language> getNativeLang() {
+        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
         if (user.isPresent()) {
             Language nativeLang = user.get().getNativeLang();
             return new ResponseEntity<>(nativeLang, HttpStatus.OK);
