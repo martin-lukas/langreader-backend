@@ -1,5 +1,6 @@
 package net.langreader.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,9 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "texts")
-@Getter @Setter @NoArgsConstructor @ToString
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@ToString
 public class Text {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,8 @@
 package net.langreader.util;
 
-import net.langreader.dto.Token;
+import net.langreader.model.Text;
+import net.langreader.model.parsing.ParsedText;
+import net.langreader.model.parsing.Token;
 import net.langreader.model.WordType;
 
 import java.util.ArrayList;
@@ -18,10 +20,14 @@ public class ParseUtils {
             NON_WORD_CHARS,
             NON_WORD_CHARS));
 
-    public static List<List<Token>> parseText(String text) {
-        return text.lines()
+    public static ParsedText parseText(Text text) {
+        ParsedText parsedText = new ParsedText();
+        parsedText.setTitle(text.getTitle());
+        List<List<Token>> tokenizedParagraphs = text.getText().lines()
                 .map(paragraph -> parseParagraph(paragraph.trim()))
                 .collect(Collectors.toList());
+        parsedText.setParagraphs(tokenizedParagraphs);
+        return parsedText;
     }
 
     private static List<Token> parseParagraph(String paragraph) {

@@ -1,4 +1,4 @@
-package net.langreader.dto;
+package net.langreader.model.parsing;
 
 import lombok.*;
 import net.langreader.model.WordType;
