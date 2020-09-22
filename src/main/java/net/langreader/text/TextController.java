@@ -62,6 +62,19 @@ public class TextController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/{textId}/parsed")
+    public ResponseEntity<ParsedText> getParsedText(@PathVariable int textId) {
+        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
+        if (user.isPresent()) {
+            Optional<Text> textOpt = textRepository.findById(textId);
+            if (textOpt.isPresent()) {
+                ParsedText parsedText = TextParser.parseText(textOpt.get());
+                return new ResponseEntity<>(parsedText, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     @PostMapping
     public ResponseEntity<?> addText(@RequestBody Text newText) {
         String textVal = newText.getText();
