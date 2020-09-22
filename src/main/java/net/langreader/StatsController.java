@@ -1,11 +1,11 @@
-package net.langreader.controller;
+package net.langreader;
 
-import net.langreader.model.LangStatistics;
-import net.langreader.model.Language;
-import net.langreader.model.User;
-import net.langreader.model.WordType;
-import net.langreader.repository.UserRepository;
-import net.langreader.repository.WordRepository;
+import net.langreader.language.LangStatistics;
+import net.langreader.language.Language;
+import net.langreader.security.User;
+import net.langreader.word.WordType;
+import net.langreader.security.UserRepository;
+import net.langreader.word.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

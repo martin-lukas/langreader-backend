@@ -1,4 +1,4 @@
-package net.langreader.controller;
+package net.langreader.text;
 
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;

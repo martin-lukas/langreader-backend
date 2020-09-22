@@ -1,4 +1,4 @@
-package net.langreader.model;
+package net.langreader.language;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

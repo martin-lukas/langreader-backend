@@ -1,11 +1,12 @@
-package net.langreader.model;
+package net.langreader.security;
 
 import lombok.*;
+import net.langreader.language.Language;
+import net.langreader.word.Word;
+import net.langreader.text.Text;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")

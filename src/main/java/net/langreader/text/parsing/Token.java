@@ -1,7 +1,7 @@
-package net.langreader.model.parsing;
+package net.langreader.text.parsing;
 
 import lombok.*;
-import net.langreader.model.WordType;
+import net.langreader.word.WordType;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @ToString

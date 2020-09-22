@@ -1,8 +1,6 @@
-package net.langreader.model;
+package net.langreader.language;
 
 import lombok.*;
-
-import javax.persistence.*;
 
 @Getter @Setter @NoArgsConstructor @ToString @AllArgsConstructor
 public class LangStatistics {

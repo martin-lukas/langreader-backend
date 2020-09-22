@@ -1,4 +1,4 @@
-package net.langreader.model.parsing;
+package net.langreader.text.parsing;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

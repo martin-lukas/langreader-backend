@@ -1,18 +1,19 @@
 package net.langreader.util;
 
-import net.langreader.model.Text;
-import net.langreader.model.parsing.ParsedText;
-import net.langreader.model.parsing.Token;
+import net.langreader.text.Text;
+import net.langreader.text.parsing.TextParser;
+import net.langreader.text.parsing.ParsedText;
+import net.langreader.text.parsing.Token;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ParseUtilsTest {
+class TextParserTest {
     @Test
     void parseTextTest() {
-        ParsedText result = ParseUtils.parseText(
+        ParsedText result = TextParser.parseText(
                 new Text(0, "Title", "Hello.\nThis is second paragraph.\nThird one.", null, null));
         List<List<Token>> paragraphs = result.getParagraphs();
         assertEquals(3, paragraphs.size(), "Wrong number of paragraphs.");
@@ -23,13 +24,13 @@ class ParseUtilsTest {
 
     @Test
     void parseEmptyTextTest() {
-        ParsedText result = ParseUtils.parseText(new Text(0, "", "", null, null));
+        ParsedText result = TextParser.parseText(new Text(0, "", "", null, null));
         assertEquals(0, result.getParagraphs().size(), "There should be no paragraph in an empty string.");
     }
 
     @Test
     void parseTextWithSpecialCharsTest() {
-        ParsedText result = ParseUtils.parseText(
+        ParsedText result = TextParser.parseText(
                 new Text(0, "", "This; (\"btw\". [non-idea]) I'm okay?", null, null));
         assertEquals(1, result.getParagraphs().size(), "There should be exactly 1 paragraph.");
         assertEquals(15, result.getParagraphs().get(0).size(), "There should be exactly 15 tokens.");
@@ -37,7 +38,7 @@ class ParseUtilsTest {
 
     @Test
     void parseTextWithNumbersTest() {
-        ParsedText result = ParseUtils.parseText(new Text(0, "", "This Plan8 is 789 points.", null, null));
+        ParsedText result = TextParser.parseText(new Text(0, "", "This Plan8 is 789 points.", null, null));
         List<List<Token>> paragraphs = result.getParagraphs();
         assertEquals(1, paragraphs.size(), "There should be exactly 1 paragraph.");
         List<Token> tokens = paragraphs.get(0);

@@ -1,17 +1,13 @@
-package net.langreader.controller;
+package net.langreader.language;
 
-import net.langreader.repository.LangRepository;
-import net.langreader.repository.UserRepository;
-import net.langreader.repository.WordRepository;
-import net.langreader.model.Language;
-import net.langreader.model.User;
+import net.langreader.security.UserRepository;
+import net.langreader.word.WordRepository;
+import net.langreader.security.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;

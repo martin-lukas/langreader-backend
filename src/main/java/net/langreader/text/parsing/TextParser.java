@@ -1,9 +1,7 @@
-package net.langreader.util;
+package net.langreader.text.parsing;
 
-import net.langreader.model.Text;
-import net.langreader.model.parsing.ParsedText;
-import net.langreader.model.parsing.Token;
-import net.langreader.model.WordType;
+import net.langreader.text.Text;
+import net.langreader.word.WordType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class ParseUtils {
+public class TextParser {
     private static final String NON_WORD_CHARS = "0-9.,!?:;\"(){}\\[\\]<>„“”…¿¡=@#";
     private static final Pattern REGEXP = Pattern.compile(String.format(
             "([%s]*)([^%s]+)([%s]*)",

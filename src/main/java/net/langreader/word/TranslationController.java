@@ -1,12 +1,12 @@
-package net.langreader.controller;
+package net.langreader.word;
 
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
-import net.langreader.repository.LangRepository;
-import net.langreader.repository.UserRepository;
-import net.langreader.model.Language;
-import net.langreader.model.User;
+import net.langreader.language.LangRepository;
+import net.langreader.security.UserRepository;
+import net.langreader.language.Language;
+import net.langreader.security.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

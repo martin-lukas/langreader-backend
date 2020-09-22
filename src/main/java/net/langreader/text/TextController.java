@@ -1,10 +1,10 @@
-package net.langreader.controller;
+package net.langreader.text;
 
-import net.langreader.repository.TextRepository;
-import net.langreader.repository.UserRepository;
-import net.langreader.model.Language;
-import net.langreader.model.Text;
-import net.langreader.model.User;
+import net.langreader.security.UserRepository;
+import net.langreader.language.Language;
+import net.langreader.security.User;
+import net.langreader.text.parsing.ParsedText;
+import net.langreader.text.parsing.TextParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +22,9 @@ public class TextController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Returns a list of text objects stripped of the content, only containing the title.
+     */
     @GetMapping
     public ResponseEntity<List<Text>> getTextTitles() {
         Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);

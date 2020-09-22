@@ -1,10 +1,12 @@
-package net.langreader.model;
+package net.langreader.text;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.langreader.language.Language;
+import net.langreader.security.User;
 
 import javax.persistence.*;
 
