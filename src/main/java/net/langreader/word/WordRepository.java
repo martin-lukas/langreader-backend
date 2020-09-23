@@ -9,9 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface WordRepository extends JpaRepository<Word, Long> {
-    Optional<Word> findByWordAndLanguageAndUser(String word, Language lang, User user);
+    Optional<Word> findByValueAndLanguageAndUser(String word, Language lang, User user);
 
-    boolean existsByWordAndLanguageAndUser(String word, Language lang, User user);
+    boolean existsByValueAndLanguageAndUser(String value, Language lang, User user);
 
     int countByTypeAndLanguageAndUser(WordType type, Language language, User user);
 

@@ -33,13 +33,13 @@ CREATE TABLE langs (
 
 CREATE TABLE word_types (
     id INT PRIMARY KEY,
-    word_type VARCHAR(50) NOT NULL
+    type VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
-    passwd VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
     native_lang_id INT NOT NULL,
     chosen_lang_id INT,
     FOREIGN KEY (native_lang_id) REFERENCES langs (id),
@@ -74,11 +74,12 @@ CREATE TABLE texts (
 
 CREATE TABLE words (
     id BIGSERIAL PRIMARY KEY,
-    word VARCHAR(50) NOT NULL,
-    word_type_id INT NOT NULL,
+    value VARCHAR(50) NOT NULL,
+    type_id INT NOT NULL,
     user_id INT NOT NULL,
     lang_id INT NOT NULL,
-    FOREIGN KEY (word_type_id) REFERENCES word_types (id),
+    FOREIGN KEY (type_id) REFERENCES word_types (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (lang_id) REFERENCES langs (id)
+    FOREIGN KEY (lang_id) REFERENCES langs (id),
+    UNIQUE (value, user_id, lang_id)
 );

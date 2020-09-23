@@ -4,5 +4,9 @@ public enum WordType {
     KNOWN,
     STUDIED,
     IGNORED,
-    UNKNOWN
+    UNKNOWN;
+
+    public static boolean isValid(WordType newWordType) {
+        return newWordType != null && newWordType != UNKNOWN;
+    }
 }

@@ -8,4 +8,9 @@ import net.langreader.word.WordType;
 public class Token {
     public String value;
     public WordType type;
+
+    public boolean isValid(boolean isTypeNeeded) {
+        return value != null && !value.isBlank()
+                && (!isTypeNeeded || (type != null && type != WordType.UNKNOWN));
+    }
 }
