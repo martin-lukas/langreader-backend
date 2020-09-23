@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,25 +18,6 @@ public class WordController {
     private UserRepository userRepository;
     @Autowired
     private WordRepository wordRepository;
-
-//    @PostMapping("/enrich")
-//    public ResponseEntity<List<Word>> enrichWords(@RequestBody List<Word> words) {
-//        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
-//        if (userOpt.isPresent()) {
-//            User user = userOpt.get();
-//            List<Word> enrichedWords = new ArrayList<>();
-//            for (Word typelessWord : words) {
-//                Optional<Word> foundWord = wordRepository.findByWordAndLanguageAndUser(
-//                        typelessWord.getWord().toLowerCase(), user.getChosenLang(), user);
-//                if (foundWord.isPresent()) {
-//                    typelessWord.setType(foundWord.get().getType());
-//                    enrichedWords.add(typelessWord);
-//                }
-//            }
-//            return new ResponseEntity<>(enrichedWords, HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
 
     @PostMapping
     public ResponseEntity<String> addWord(@RequestBody Token token) {
