@@ -5,6 +5,8 @@ import net.langreader.language.Language;
 import net.langreader.security.User;
 import net.langreader.text.parsing.ParsedText;
 import net.langreader.text.parsing.TextParser;
+import net.langreader.word.Word;
+import net.langreader.word.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ public class TextController {
     private TextRepository textRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private WordRepository wordRepository;
 
     /**
      * Returns a list of text objects stripped of the content, only containing the title.
@@ -69,7 +73,8 @@ public class TextController {
             Optional<Text> textOpt = textRepository.findById(textId);
             if (textOpt.isPresent()) {
                 ParsedText parsedText = TextParser.parseText(textOpt.get());
-                return new ResponseEntity<>(parsedText, HttpStatus.OK);
+                ParsedText enrichedText = enrichTextForUser(parsedText, user.get());
+                return new ResponseEntity<>(enrichedText, HttpStatus.OK);
             }
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -155,5 +160,20 @@ public class TextController {
             }
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    private ParsedText enrichTextForUser(ParsedText parsedText, User user) {
+        Language chosenLang = user.getChosenLang();
+
+        parsedText.getParagraphs().forEach(paragraph -> paragraph.stream()
+                .filter(token -> token.getType() != null)
+                .forEach(token -> {
+                    Optional<Word> foundWord = wordRepository.findByValueAndLanguageAndUser(
+                            token.getValue().toLowerCase(), chosenLang, user);
+                    foundWord.ifPresent(word -> token.setType(word.getType()));
+                })
+        );
+
+        return parsedText;
     }
 }
