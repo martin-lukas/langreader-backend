@@ -1,9 +1,12 @@
-package net.langreader.word;
+package net.langreader.controller;
 
-import net.langreader.security.UserRepository;
-import net.langreader.language.Language;
-import net.langreader.security.User;
-import net.langreader.text.parsing.Token;
+import net.langreader.repository.UserRepository;
+import net.langreader.model.Language;
+import net.langreader.model.User;
+import net.langreader.model.Token;
+import net.langreader.model.Word;
+import net.langreader.repository.WordRepository;
+import net.langreader.model.WordType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/words")
 public class WordController {
     @Autowired
@@ -28,40 +32,44 @@ public class WordController {
                 User user = userOpt.get();
                 Language chosenLang = user.getChosenLang();
                 if (!wordRepository.existsByValueAndLanguageAndUser(value, chosenLang, user)) {
-                    Word newWord = new Word(null, token.getValue(), token.getType(), chosenLang, user);
+                    Word newWord = new Word(null, token.getValue().toLowerCase(), token.getType(), chosenLang, user);
                     wordRepository.save(newWord);
-                    return new ResponseEntity<>("New word successfully added.", HttpStatus.OK);
+                    return new ResponseEntity<>("New word added.", HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>(
                             "This word is already present in your database. " +
                                     "For updating its type, use PUT method.",
-                            HttpStatus.BAD_REQUEST);
+                            HttpStatus.BAD_REQUEST
+                    );
                 }
             }
         }
 
         return new ResponseEntity<>(
-                "Please check that the token data is valid " +
-                        "(non-empty value and type not null nor UNKNOWN).",
-                HttpStatus.BAD_REQUEST);
+                "Please check that the token data is valid (non-empty value and type not null nor UNKNOWN).",
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     @PutMapping
     public ResponseEntity<String> updateWord(@RequestBody Token token) {
         Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
-            String value = token.getValue();
+            String value = token.getValue().toLowerCase();
             WordType newType = token.getType();
             if (token.isValid(true)) {
                 User user = userOpt.get();
                 Optional<Word> foundWordOpt = wordRepository.findByValueAndLanguageAndUser(
-                        value, user.getChosenLang(), user);
+                        value,
+                        user.getChosenLang(),
+                        user
+                );
                 if (foundWordOpt.isPresent()) {
                     Word foundWord = foundWordOpt.get();
                     if (foundWord.getType() != newType) {
                         foundWord.setType(token.getType());
                         wordRepository.save(foundWord);
-                        return new ResponseEntity<>("Word type successfully updated.", HttpStatus.OK);
+                        return new ResponseEntity<>("Word type updated.", HttpStatus.OK);
                     } else {
                         return new ResponseEntity<>(
                                 "The provided type doesn't differ from the old one.",
@@ -69,9 +77,9 @@ public class WordController {
                     }
                 } else {
                     return new ResponseEntity<>(
-                            "The provided word doesn't exist yet. " +
-                                "For adding it, use POST method.",
-                            HttpStatus.BAD_REQUEST);
+                            "The provided word doesn't exist yet. For adding it, use POST method.",
+                            HttpStatus.BAD_REQUEST
+                    );
                 }
             }
         }
@@ -79,30 +87,36 @@ public class WordController {
         return new ResponseEntity<>(
                 "Please check that the token data is valid " +
                     "(existing value and type not null nor UNKNOWN).",
-                HttpStatus.BAD_REQUEST);
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteWord(@RequestBody Token token) {
+    public ResponseEntity<String> deleteWord(@RequestParam("word") String value) {
         Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
-            if (token.isValid(false)) {
+            if (value != null && !value.isBlank()) {
                 User user = userOpt.get();
                 Optional<Word> foundWordOpt = wordRepository.findByValueAndLanguageAndUser(
-                        token.getValue(), user.getChosenLang(), user);
+                        value.toLowerCase(),
+                        user.getChosenLang(),
+                        user
+                );
                 if (foundWordOpt.isPresent()) {
                     wordRepository.delete(foundWordOpt.get());
-                    return new ResponseEntity<>("Word successfully deleted.", HttpStatus.OK);
+                    return new ResponseEntity<>("Word deleted.", HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>(
                             "Attempting to delete a word not present in your database.",
-                            HttpStatus.BAD_REQUEST);
+                            HttpStatus.BAD_REQUEST
+                    );
                 }
             }
         }
 
         return new ResponseEntity<>(
                 "Please check that the token data is valid (existing value)",
-                HttpStatus.BAD_REQUEST);
+                HttpStatus.BAD_REQUEST
+        );
     }
 }

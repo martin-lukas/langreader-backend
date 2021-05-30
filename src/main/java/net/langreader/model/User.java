@@ -1,9 +1,6 @@
-package net.langreader.security;
+package net.langreader.model;
 
 import lombok.*;
-import net.langreader.language.Language;
-import net.langreader.word.Word;
-import net.langreader.text.Text;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,31 +13,26 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @NonNull private String username;
-
+    @NonNull
+    private String username;
     @NonNull
     @Column(name = "passwd")
     private String password;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_langs",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "lang_id"))
+            inverseJoinColumns = @JoinColumn(name = "lang_id")
+    )
     private List<Language> langs;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chosen_lang_id")
     private Language chosenLang;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "native_lang_id")
     private Language nativeLang;
-
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Word> words;
-
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Text> texts;
 

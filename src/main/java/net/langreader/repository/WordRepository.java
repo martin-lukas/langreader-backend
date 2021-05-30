@@ -1,7 +1,9 @@
-package net.langreader.word;
+package net.langreader.repository;
 
-import net.langreader.language.Language;
-import net.langreader.security.User;
+import net.langreader.model.Language;
+import net.langreader.model.User;
+import net.langreader.model.Word;
+import net.langreader.model.WordType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

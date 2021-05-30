@@ -1,4 +1,4 @@
-package net.langreader.language;
+package net.langreader.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,8 +14,6 @@ public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String code;
-
     private String fullName;
 }

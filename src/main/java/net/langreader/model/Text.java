@@ -1,12 +1,6 @@
-package net.langreader.text;
+package net.langreader.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import net.langreader.language.Language;
-import net.langreader.security.User;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -19,16 +13,17 @@ public class Text {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String title;
-
     private String text;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lang_id")
     private Language language;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Text(String title, String text) {
+        this.title = title;
+        this.text = text;
+    }
 }

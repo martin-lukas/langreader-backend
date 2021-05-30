@@ -1,9 +1,8 @@
 package net.langreader.util;
 
-import net.langreader.text.Text;
-import net.langreader.text.parsing.TextParser;
-import net.langreader.text.parsing.ParsedText;
-import net.langreader.text.parsing.Token;
+import net.langreader.model.Text;
+import net.langreader.model.ParsedText;
+import net.langreader.model.Token;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -1,7 +1,9 @@
-package net.langreader.text.parsing;
+package net.langreader.util;
 
-import net.langreader.text.Text;
-import net.langreader.word.WordType;
+import net.langreader.model.ParsedText;
+import net.langreader.model.Token;
+import net.langreader.model.Text;
+import net.langreader.model.WordType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

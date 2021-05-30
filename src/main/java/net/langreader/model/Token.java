@@ -1,7 +1,6 @@
-package net.langreader.text.parsing;
+package net.langreader.model;
 
 import lombok.*;
-import net.langreader.word.WordType;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @ToString
@@ -10,7 +9,6 @@ public class Token {
     public WordType type;
 
     public boolean isValid(boolean isTypeNeeded) {
-        return value != null && !value.isBlank()
-                && (!isTypeNeeded || (type != null && type != WordType.UNKNOWN));
+        return value != null && !value.isBlank() && (!isTypeNeeded || (WordType.isValid(type)));
     }
 }

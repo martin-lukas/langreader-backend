@@ -1,22 +1,31 @@
-package net.langreader.text;
+package net.langreader.controller;
 
-import net.langreader.security.UserRepository;
-import net.langreader.language.Language;
-import net.langreader.security.User;
-import net.langreader.text.parsing.ParsedText;
-import net.langreader.text.parsing.TextParser;
-import net.langreader.word.Word;
-import net.langreader.word.WordRepository;
+import de.l3s.boilerpipe.BoilerpipeProcessingException;
+import de.l3s.boilerpipe.extractors.ArticleExtractor;
+import net.langreader.repository.UserRepository;
+import net.langreader.model.Language;
+import net.langreader.model.User;
+import net.langreader.model.Text;
+import net.langreader.repository.TextRepository;
+import net.langreader.model.UrlText;
+import net.langreader.model.ParsedText;
+import net.langreader.util.TextParser;
+import net.langreader.model.Word;
+import net.langreader.repository.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.xml.sax.InputSource;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/texts")
 public class TextController {
     @Autowired
@@ -26,9 +35,6 @@ public class TextController {
     @Autowired
     private WordRepository wordRepository;
 
-    /**
-     * Returns a list of text objects stripped of the content, only containing the title.
-     */
     @GetMapping
     public ResponseEntity<List<Text>> getTextTitles() {
         Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
@@ -81,7 +87,7 @@ public class TextController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addText(@RequestBody Text newText) {
+    public ResponseEntity<String> addText(@RequestBody Text newText) {
         String textVal = newText.getText();
         if (textVal != null && !textVal.isEmpty()) {
             Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
@@ -93,17 +99,18 @@ public class TextController {
                     newText.setUser(user);
                     newText.setLanguage(chosenLang);
                     textRepository.save(newText);
-                    return new ResponseEntity<>(HttpStatus.OK);
+                    return new ResponseEntity<>("New text added.", HttpStatus.OK);
                 }
             }
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                "Please check that the text data is valid (non-empty title and text).",
+                HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping
     public ResponseEntity<?> updateText(@RequestBody Text text) {
-        String textVal = text.getText();
-        if (textVal != null && !textVal.isEmpty()) {
+        if (isValid(text)) {
             Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
             if (userOpt.isPresent()) {
                 Optional<Text> foundTextOpt = textRepository.findById(text.getId());
@@ -112,54 +119,43 @@ public class TextController {
                     foundText.setTitle(text.getTitle());
                     foundText.setText(text.getText());
                     textRepository.save(foundText);
-                    return new ResponseEntity<>(HttpStatus.OK);
+                    return new ResponseEntity<>("Text updated.", HttpStatus.OK);
                 }
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(
+                        "Attempting to update a text not present in your database.",
+                        HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Check if the text is valid.", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteText(@RequestBody Text text) {
+    public ResponseEntity<String> deleteText(@RequestParam("id") int textId) {
         Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
-            if (textRepository.existsById(text.getId())) {
-                textRepository.deleteById(text.getId());
-                return new ResponseEntity<>(HttpStatus.OK);
+            if (textRepository.existsById(textId)) {
+                textRepository.deleteById(textId);
+                return new ResponseEntity<>("Text deleted.", HttpStatus.OK);
             }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    "Attempting to delete a text not present in your database.",
+                    HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/batch")
-    public ResponseEntity<?> addTexts(@RequestBody List<Text> newTexts) {
-        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            Language chosenLang = user.getChosenLang();
-            if (chosenLang != null) {
-                boolean isTextListValid = true;
-                for (Text newText : newTexts) {
-                    String textVal = newText.getText();
-                    if (textVal == null || textVal.isEmpty()) {
-                        isTextListValid = false;
-                        break;
-                    }
-                }
-                if (isTextListValid) {
-                    for (Text newText : newTexts) {
-                        newText.setId(null);
-                        newText.setUser(user);
-                        newText.setLanguage(chosenLang);
-                        textRepository.save(newText);
-                    }
-                    return new ResponseEntity<>(HttpStatus.OK);
-                }
-            }
+    @PostMapping("/url")
+    public ResponseEntity<String> addTextFromUrl(@RequestBody UrlText urlText) {
+        try {
+            InputSource is = new InputSource();
+            is.setEncoding("UTF-8");
+            is.setByteStream(new URL(urlText.getUrl()).openStream());
+            String text = ArticleExtractor.INSTANCE.getText(is);
+            return addText(new Text(urlText.getTitle(), text));
+        } catch (IOException | BoilerpipeProcessingException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Couldn't add text from URL.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     private ParsedText enrichTextForUser(ParsedText parsedText, User user) {
@@ -175,5 +171,11 @@ public class TextController {
         );
 
         return parsedText;
+    }
+
+    private boolean isValid(Text text) {
+        String title = text.getTitle();
+        String textVal = text.getText();
+        return title != null && !title.isBlank() && textVal != null && !textVal.isBlank();
     }
 }

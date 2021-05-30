@@ -1,6 +1,7 @@
 package net.langreader.language;
 
 import lombok.*;
+import net.langreader.model.Language;
 
 @Getter @Setter @NoArgsConstructor @ToString @AllArgsConstructor
 public class LangStatistics {

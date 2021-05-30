@@ -1,13 +1,13 @@
-package net.langreader.text.parsing;
+package net.langreader.model;
 
-import net.langreader.word.WordType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TokenTest {
     @Test
-    void isValid() {
+    void testIsValid() {
         Token tokenWithType = new Token("aToken", WordType.STUDIED);
         assertTrue(tokenWithType.isValid(true));
         assertTrue(tokenWithType.isValid(false));

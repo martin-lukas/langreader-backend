@@ -1,4 +1,4 @@
-package net.langreader.word;
+package net.langreader.model;
 
 public enum WordType {
     KNOWN,
