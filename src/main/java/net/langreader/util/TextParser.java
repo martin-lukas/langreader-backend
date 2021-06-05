@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class TextParser {
-    private static final String NON_WORD_CHARS = "0-9.,!?:;\"(){}\\[\\]<>„“”…¿¡=@#";
+    private static final String NON_WORD_CHARS = "0-9.,!?:;(){}\\[\\]<>\"'„“”‘’…¿¡=@#~";
     private static final Pattern REGEXP = Pattern.compile(String.format(
             "([%s]*)([^%s]+)([%s]*)",
             NON_WORD_CHARS,
