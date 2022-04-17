@@ -12,9 +12,4 @@ public class DefaultController implements ErrorController {
     public String redirect() {
         return "forward:/";
     }
-
-    @Override
-    public String getErrorPath() {
-        return "forward:/";
-    }
 }
