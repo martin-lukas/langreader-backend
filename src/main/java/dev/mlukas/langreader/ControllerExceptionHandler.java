@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.exception;
+package dev.mlukas.langreader;
 
 import dev.mlukas.langreader.language.NoChosenLanguageException;
 import dev.mlukas.langreader.text.TextNotFoundException;

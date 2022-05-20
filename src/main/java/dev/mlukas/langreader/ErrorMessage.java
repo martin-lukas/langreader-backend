@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.exception;
+package dev.mlukas.langreader;
 
 import org.springframework.http.HttpStatus;
 
