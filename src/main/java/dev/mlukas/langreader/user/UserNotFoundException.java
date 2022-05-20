@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.exception;
+package dev.mlukas.langreader.user;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {

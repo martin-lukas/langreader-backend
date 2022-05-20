@@ -1,7 +1,5 @@
-package dev.mlukas.langreader.repository;
+package dev.mlukas.langreader.user;
 
-import dev.mlukas.langreader.exception.UserNotFoundException;
-import dev.mlukas.langreader.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,9 @@
-package dev.mlukas.langreader.model;
+package dev.mlukas.langreader.user;
 
 import com.google.common.base.MoreObjects;
+import dev.mlukas.langreader.model.Language;
+import dev.mlukas.langreader.model.Text;
+import dev.mlukas.langreader.model.Word;
 
 import javax.annotation.Nonnull;
 import javax.persistence.*;

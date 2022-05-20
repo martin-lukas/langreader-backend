@@ -1,8 +1,8 @@
 package dev.mlukas.langreader.controller;
 
 import dev.mlukas.langreader.model.Language;
-import dev.mlukas.langreader.model.User;
-import dev.mlukas.langreader.repository.UserRepository;
+import dev.mlukas.langreader.user.User;
+import dev.mlukas.langreader.user.UserRepository;
 import dev.mlukas.langreader.model.Token;
 import dev.mlukas.langreader.model.Word;
 import dev.mlukas.langreader.repository.WordRepository;

@@ -1,7 +1,5 @@
-package dev.mlukas.langreader.controller;
+package dev.mlukas.langreader.user;
 
-import dev.mlukas.langreader.model.User;
-import dev.mlukas.langreader.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

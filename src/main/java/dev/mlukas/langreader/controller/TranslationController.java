@@ -1,9 +1,9 @@
 package dev.mlukas.langreader.controller;
 
 import dev.mlukas.langreader.model.Language;
-import dev.mlukas.langreader.model.User;
+import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.repository.LangRepository;
-import dev.mlukas.langreader.repository.UserRepository;
+import dev.mlukas.langreader.user.UserRepository;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
