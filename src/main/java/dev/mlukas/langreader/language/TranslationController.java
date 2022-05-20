@@ -1,11 +1,10 @@
 package dev.mlukas.langreader.language;
 
-import dev.mlukas.langreader.user.User;
-import dev.mlukas.langreader.user.UserRepository;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
-import org.springframework.beans.factory.annotation.Autowired;
+import dev.mlukas.langreader.user.User;
+import dev.mlukas.langreader.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +18,16 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/translate")
 public class TranslationController {
+    private final LangRepository langRepository;
+    private final UserRepository userRepository;
+    // TODO: Can I move this into constructor?
     @Value("${langreader.app.googleApiKey}")
     private String googleApiKey;
 
-    @Autowired
-    private LangRepository langRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    public TranslationController(LangRepository langRepository, UserRepository userRepository) {
+        this.langRepository = langRepository;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping
     public ResponseEntity<String> getTranslation(@RequestParam(value = "word") String word) {

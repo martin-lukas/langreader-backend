@@ -1,9 +1,8 @@
 package dev.mlukas.langreader.language;
 
+import dev.mlukas.langreader.text.WordRepository;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserRepository;
-import dev.mlukas.langreader.text.WordRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +15,15 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/langs")
 public class LanguageController {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private LangRepository langRepository;
-    @Autowired
-    private WordRepository wordRepository;
+    private final UserRepository userRepository;
+    private final LangRepository langRepository;
+    private final WordRepository wordRepository;
+
+    public LanguageController(UserRepository userRepository, LangRepository langRepository, WordRepository wordRepository) {
+        this.userRepository = userRepository;
+        this.langRepository = langRepository;
+        this.wordRepository = wordRepository;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Language>> getAllLangs() {

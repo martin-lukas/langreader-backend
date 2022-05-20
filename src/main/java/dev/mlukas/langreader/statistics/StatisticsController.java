@@ -1,11 +1,10 @@
 package dev.mlukas.langreader.statistics;
 
 import dev.mlukas.langreader.language.Language;
-import dev.mlukas.langreader.user.User;
-import dev.mlukas.langreader.text.WordType;
-import dev.mlukas.langreader.user.UserRepository;
 import dev.mlukas.langreader.text.WordRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import dev.mlukas.langreader.text.WordType;
+import dev.mlukas.langreader.user.User;
+import dev.mlukas.langreader.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +19,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/stats")
 public class StatisticsController {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private WordRepository wordRepository;
+    private final UserRepository userRepository;
+    private final WordRepository wordRepository;
+
+    public StatisticsController(UserRepository userRepository, WordRepository wordRepository) {
+        this.userRepository = userRepository;
+        this.wordRepository = wordRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<LanguageStatistics>> getStatistics() {

@@ -1,12 +1,11 @@
 package dev.mlukas.langreader.text;
 
-import dev.mlukas.langreader.language.NoChosenLanguageException;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
-import dev.mlukas.langreader.user.UserRepository;
 import dev.mlukas.langreader.language.Language;
+import dev.mlukas.langreader.language.NoChosenLanguageException;
 import dev.mlukas.langreader.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import dev.mlukas.langreader.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +21,15 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/texts")
 public class TextController {
-    @Autowired
-    private TextRepository textRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private WordRepository wordRepository;
+    private final TextRepository textRepository;
+    private final UserRepository userRepository;
+    private final WordRepository wordRepository;
+
+    public TextController(TextRepository textRepository, UserRepository userRepository, WordRepository wordRepository) {
+        this.textRepository = textRepository;
+        this.userRepository = userRepository;
+        this.wordRepository = wordRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<Text>> getTextTitles() {
