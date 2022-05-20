@@ -11,7 +11,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>net.langreader</groupId>
+    <groupId>dev.mlukas.langreader</groupId>
     <artifactId>langreader</artifactId>
     <version>0.2.0-SNAPSHOT</version>
 
