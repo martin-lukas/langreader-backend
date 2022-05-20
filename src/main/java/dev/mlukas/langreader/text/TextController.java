@@ -1,19 +1,11 @@
-package dev.mlukas.langreader.controller;
+package dev.mlukas.langreader.text;
 
 import dev.mlukas.langreader.language.NoChosenLanguageException;
-import dev.mlukas.langreader.model.ParsedText;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
-import dev.mlukas.langreader.exception.TextNotFoundException;
 import dev.mlukas.langreader.user.UserRepository;
 import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.user.User;
-import dev.mlukas.langreader.model.Text;
-import dev.mlukas.langreader.repository.TextRepository;
-import dev.mlukas.langreader.model.UrlText;
-import dev.mlukas.langreader.util.TextParser;
-import dev.mlukas.langreader.model.Word;
-import dev.mlukas.langreader.repository.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

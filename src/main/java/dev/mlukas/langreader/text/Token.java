@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.model;
+package dev.mlukas.langreader.text;
 
 import com.google.common.base.MoreObjects;
 

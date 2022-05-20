@@ -1,12 +1,8 @@
-package dev.mlukas.langreader.controller;
+package dev.mlukas.langreader.text;
 
 import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserRepository;
-import dev.mlukas.langreader.model.Token;
-import dev.mlukas.langreader.model.Word;
-import dev.mlukas.langreader.repository.WordRepository;
-import dev.mlukas.langreader.model.WordType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,7 @@
 package dev.mlukas.langreader.exception;
 
 import dev.mlukas.langreader.language.NoChosenLanguageException;
+import dev.mlukas.langreader.text.TextNotFoundException;
 import dev.mlukas.langreader.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

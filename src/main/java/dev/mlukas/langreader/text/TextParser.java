@@ -1,9 +1,4 @@
-package dev.mlukas.langreader.util;
-
-import dev.mlukas.langreader.model.ParsedText;
-import dev.mlukas.langreader.model.Token;
-import dev.mlukas.langreader.model.Text;
-import dev.mlukas.langreader.model.WordType;
+package dev.mlukas.langreader.text;
 
 import java.util.ArrayList;
 import java.util.Arrays;

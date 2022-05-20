@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.model;
+package dev.mlukas.langreader.text;
 
 public enum WordType {
     KNOWN,

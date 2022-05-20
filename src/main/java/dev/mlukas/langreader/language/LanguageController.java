@@ -2,7 +2,7 @@ package dev.mlukas.langreader.language;
 
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserRepository;
-import dev.mlukas.langreader.repository.WordRepository;
+import dev.mlukas.langreader.text.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
