@@ -1,7 +1,7 @@
 package dev.mlukas.langreader.controller;
 
-import dev.mlukas.langreader.language.LangStatistics;
-import dev.mlukas.langreader.model.Language;
+import dev.mlukas.langreader.language.LanguageStatistics;
+import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.model.WordType;
 import dev.mlukas.langreader.user.UserRepository;
@@ -27,21 +27,21 @@ public class StatsController {
     private WordRepository wordRepository;
 
     @GetMapping
-    public ResponseEntity<List<LangStatistics>> getStatistics() {
+    public ResponseEntity<List<LanguageStatistics>> getStatistics() {
         Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            List<LangStatistics> stats = new ArrayList<>();
+            List<LanguageStatistics> stats = new ArrayList<>();
             List<Language> userLangs = user.getLangs();
             for (Language userLang : userLangs) {
-                stats.add(new LangStatistics(
+                stats.add(new LanguageStatistics(
                         userLang,
                         wordRepository.countByTypeAndLanguageAndUser(WordType.KNOWN, userLang, user),
                         wordRepository.countByTypeAndLanguageAndUser(WordType.STUDIED, userLang, user),
                         wordRepository.countByTypeAndLanguageAndUser(WordType.IGNORED, userLang, user)
                 ));
             }
-            stats.sort(Comparator.comparing(LangStatistics::getKnownCount).reversed());
+            stats.sort(Comparator.comparing(LanguageStatistics::getKnownCount).reversed());
             return new ResponseEntity<>(stats, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

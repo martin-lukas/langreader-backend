@@ -1,7 +1,7 @@
 package dev.mlukas.langreader.user;
 
 import com.google.common.base.MoreObjects;
-import dev.mlukas.langreader.model.Language;
+import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.model.Text;
 import dev.mlukas.langreader.model.Word;
 

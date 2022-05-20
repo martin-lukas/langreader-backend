@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.model;
+package dev.mlukas.langreader.language;
 
 import javax.persistence.*;
 import java.util.Objects;

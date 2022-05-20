@@ -1,6 +1,7 @@
 package dev.mlukas.langreader.model;
 
 import com.google.common.base.MoreObjects;
+import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.user.User;
 
 import javax.persistence.*;

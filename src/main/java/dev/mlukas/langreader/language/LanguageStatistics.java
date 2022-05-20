@@ -1,18 +1,17 @@
 package dev.mlukas.langreader.language;
 
-import dev.mlukas.langreader.model.Language;
 import com.google.common.base.MoreObjects;
 
-public class LangStatistics {
+public class LanguageStatistics {
     private Language language;
     private int knownCount;
     private int studiedCount;
     private int ignoredCount;
 
-    public LangStatistics() {
+    public LanguageStatistics() {
     }
 
-    public LangStatistics(Language language, int knownCount, int studiedCount, int ignoredCount) {
+    public LanguageStatistics(Language language, int knownCount, int studiedCount, int ignoredCount) {
         this.language = language;
         this.knownCount = knownCount;
         this.studiedCount = studiedCount;

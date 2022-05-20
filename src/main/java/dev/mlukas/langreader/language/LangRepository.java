@@ -1,6 +1,5 @@
-package dev.mlukas.langreader.repository;
+package dev.mlukas.langreader.language;
 
-import dev.mlukas.langreader.model.Language;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
