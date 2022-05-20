@@ -1,6 +1,5 @@
-package dev.mlukas.langreader.controller;
+package dev.mlukas.langreader.statistics;
 
-import dev.mlukas.langreader.language.LanguageStatistics;
 import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.text.WordType;
@@ -20,7 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/stats")
-public class StatsController {
+public class StatisticsController {
     @Autowired
     private UserRepository userRepository;
     @Autowired

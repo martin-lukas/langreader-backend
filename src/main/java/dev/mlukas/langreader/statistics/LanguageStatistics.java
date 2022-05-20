@@ -1,6 +1,7 @@
-package dev.mlukas.langreader.language;
+package dev.mlukas.langreader.statistics;
 
 import com.google.common.base.MoreObjects;
+import dev.mlukas.langreader.language.Language;
 
 public class LanguageStatistics {
     private Language language;

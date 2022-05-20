@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.controller;
+package dev.mlukas.langreader;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
