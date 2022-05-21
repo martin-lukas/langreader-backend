@@ -45,6 +45,11 @@
             <version>${postgresql.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+            <version>3.22.0</version>
+        </dependency>
 
         <!-- Boilerpipe - for HTML main text extraction -->
         <dependency>
