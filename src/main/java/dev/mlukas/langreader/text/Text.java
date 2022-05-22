@@ -3,6 +3,7 @@ package dev.mlukas.langreader.text;
 import com.google.common.base.MoreObjects;
 import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.user.User;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.persistence.*;
 
@@ -11,25 +12,27 @@ import javax.persistence.*;
 public class Text {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String title;
-    private String text;
+    private @Nullable Integer id;
+
+    private String title = "";
+
+    // TODO: Rename field to content.
+    private @Nullable String text;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lang_id")
-    private Language language;
+    private @Nullable Language language;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private @Nullable User user;
 
+    @SuppressWarnings("unused")
     public Text() {
+        // For JPA purposes
     }
 
-    public Text(String title, String text) {
-        this.title = title;
-        this.text = text;
-    }
-
-    public Text(Integer id, String title, String text, Language language, User user) {
+    public Text(@Nullable Integer id, String title, String text, @Nullable Language language, @Nullable User user) {
         this.id = id;
         this.title = title;
         this.text = text;
@@ -37,11 +40,11 @@ public class Text {
         this.user = user;
     }
 
-    public Integer getId() {
+    public @Nullable Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(@Nullable Integer id) {
         this.id = id;
     }
 
@@ -53,27 +56,27 @@ public class Text {
         this.title = title;
     }
 
-    public String getText() {
+    public @Nullable String getText() {
         return text;
     }
 
-    public void setText(String text) {
+    public void setText(@Nullable String text) {
         this.text = text;
     }
 
-    public Language getLanguage() {
+    public @Nullable Language getLanguage() {
         return language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(@Nullable Language language) {
         this.language = language;
     }
 
-    public User getUser() {
+    public @Nullable User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(@Nullable User user) {
         this.user = user;
     }
 

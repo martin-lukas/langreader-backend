@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class TextParser {
     private static final String NON_WORD_CHARS = "0-9.,!?:;(){}\\[\\]<>\"'„“”‘’…¿¡=@#~";
@@ -13,14 +12,22 @@ public class TextParser {
             "([%s]*)([^%s]+)([%s]*)",
             NON_WORD_CHARS,
             NON_WORD_CHARS,
-            NON_WORD_CHARS));
+            NON_WORD_CHARS
+    ));
+
+    private TextParser() {
+        // Utility class
+    }
 
     public static ParsedText parseText(Text text) {
+        if (text.getText() == null) {
+            throw new TextEmptyParsingException("Cannot parse empty text.");
+        }
         ParsedText parsedText = new ParsedText();
         parsedText.setTitle(text.getTitle());
         List<List<Token>> tokenizedParagraphs = text.getText().lines()
                 .map(paragraph -> parseParagraph(paragraph.trim()))
-                .collect(Collectors.toList());
+                .toList();
         parsedText.setParagraphs(tokenizedParagraphs);
         return parsedText;
     }

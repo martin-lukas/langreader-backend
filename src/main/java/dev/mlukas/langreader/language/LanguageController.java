@@ -1,110 +1,88 @@
 package dev.mlukas.langreader.language;
 
-import dev.mlukas.langreader.text.WordRepository;
+import dev.mlukas.langreader.text.WordService;
 import dev.mlukas.langreader.user.User;
-import dev.mlukas.langreader.user.UserRepository;
+import dev.mlukas.langreader.user.UserService;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/langs")
 public class LanguageController {
-    private final UserRepository userRepository;
-    private final LangRepository langRepository;
-    private final WordRepository wordRepository;
+    private final UserService userService;
+    private final LanguageService languageService;
+    private final WordService wordService;
 
-    public LanguageController(UserRepository userRepository, LangRepository langRepository, WordRepository wordRepository) {
-        this.userRepository = userRepository;
-        this.langRepository = langRepository;
-        this.wordRepository = wordRepository;
+    public LanguageController(UserService userService, LanguageService languageService, WordService wordService) {
+        this.userService = userService;
+        this.languageService = languageService;
+        this.wordService = wordService;
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Language>> getAllLangs() {
-        List<Language> languages = langRepository.findAll();
+    public List<Language> getAllLangs() {
+        List<Language> languages = languageService.getAllLanguages();
         languages.sort(Comparator.comparing(Language::getFullName));
-        return new ResponseEntity<>(languages, HttpStatus.OK);
+        return languages;
     }
 
     @GetMapping
-    public ResponseEntity<List<Language>> getUserLangs() {
-        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
-        if (user.isPresent()) {
-            List<Language> languages = user.get().getLangs();
-            return new ResponseEntity<>(languages, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public List<Language> getUserLangs() {
+        User user = userService.getUser(UserService.MARTIN);
+        return user.getLangs();
     }
 
     @PostMapping
-    public ResponseEntity<String> addUserLang(@RequestBody Language newLang) {
-        Optional<User> foundUser = userRepository.findByUsername(UserRepository.MARTIN);
-        if (foundUser.isPresent()) {
-            User user = foundUser.get();
-            List<Language> usersLangs = user.getLangs();
-            if (!usersLangs.contains(newLang)) {
-                user.addLanguage(newLang);
-                userRepository.save(user);
-                return new ResponseEntity<>("New user language added.", HttpStatus.OK);
-            }
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> addUserLang(@Valid @RequestBody LanguageChangeRequest newLang) {
+        User foundUser = userService.getUser(UserService.MARTIN);
+        Language foundLanguage = languageService.getLanguageByCodeAndFullName(newLang.code(), newLang.fullName());
+        List<Language> usersLangs = foundUser.getLangs();
+        if (!usersLangs.contains(foundLanguage)) {
+            foundUser.addLanguage(foundLanguage);
+            userService.save(foundUser);
+            return new ResponseEntity<>("New user language added.", HttpStatus.OK);
         }
         return new ResponseEntity<>("This user language is already added.", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping
-    public ResponseEntity<String> removeUserLang(@RequestParam("id") int langId) {
-        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
-        if (userOpt.isPresent()) {
-            User foundUser = userOpt.get();
-            Language lang = langRepository.findById(langId);
-            if (lang != null) {
-                foundUser.removeLanguage(lang);
-                wordRepository.deleteAllByUserAndLanguage(foundUser, lang);
-                userRepository.save(foundUser);
-                return new ResponseEntity<>("User language deleted.", HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity<>(
-                "Attempting to delete a user language not present in your database.",
-                HttpStatus.BAD_REQUEST
-        );
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeUserLang(@RequestParam("id") int langId) {
+        User foundUser = userService.getUser(UserService.MARTIN);
+        Language lang = languageService.getLanguage(langId);
+        foundUser.removeLanguage(lang);
+        wordService.deleteAllByUserAndLanguage(foundUser, lang);
+        userService.save(foundUser);
     }
 
     @GetMapping("/chosen")
-    public ResponseEntity<Language> getChosenLang() {
-        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
-        if (user.isPresent()) {
-            Language chosenlanguage = user.get().getChosenLang();
-            return new ResponseEntity<>(chosenlanguage, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public @Nullable Language getChosenLang() {
+        User user = userService.getUser(UserService.MARTIN);
+        // TODO: refactor to return exception instead of null
+        return user.getChosenLang();
     }
 
     @PutMapping("/chosen")
-    public ResponseEntity<String> updateChosenLang(@RequestBody Language newChosenLang) {
-        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
-        if (user.isPresent()) {
-            User foundUser = user.get();
-            foundUser.setChosenLang(newChosenLang);
-            userRepository.save(foundUser);
-            return new ResponseEntity<>("Changed chosen lang.", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Check if the language is valid.", HttpStatus.BAD_REQUEST);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateChosenLang(@Valid @RequestBody LanguageChangeRequest newChosenLang) {
+        User foundUser = userService.getUser(UserService.MARTIN);
+        Language foundLanguage = languageService.getLanguageByCodeAndFullName(newChosenLang.code(), newChosenLang.fullName());
+        foundUser.setChosenLang(foundLanguage);
+        userService.save(foundUser);
     }
 
     @GetMapping("/native")
-    public ResponseEntity<Language> getNativeLang() {
-        Optional<User> user = userRepository.findByUsername(UserRepository.MARTIN);
-        if (user.isPresent()) {
-            Language nativeLang = user.get().getNativeLang();
-            return new ResponseEntity<>(nativeLang, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public @Nullable Language getNativeLang() {
+        User user = userService.getUser(UserService.MARTIN);
+        // TODO: refactor to return exception instead of null
+        return user.getNativeLang();
     }
 }

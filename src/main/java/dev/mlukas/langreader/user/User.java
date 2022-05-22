@@ -2,13 +2,13 @@ package dev.mlukas.langreader.user;
 
 import com.google.common.base.MoreObjects;
 import dev.mlukas.langreader.language.Language;
+import dev.mlukas.langreader.language.NoChosenLanguageException;
 import dev.mlukas.langreader.text.Text;
 import dev.mlukas.langreader.text.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import javax.annotation.Nonnull;
 import javax.persistence.*;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -16,11 +16,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Nonnull
-    private String username;
-    @Nonnull
+
+    private String username = "";
+
+    // Column names passwd to avoid clash with keyword
     @Column(name = "passwd")
-    private String password;
+    private String password = "";
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",
@@ -30,29 +32,33 @@ public class User {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chosen_lang_id")
-    private Language chosenLang;
+    private @Nullable Language chosenLang;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "native_lang_id")
-    private Language nativeLang;
+    private @Nullable Language nativeLang;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_langs",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "lang_id")
+    )
+    private List<Language> langs = new ArrayList<>();
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Word> words;
+    private List<Word> words = new ArrayList<>();
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Text> texts;
+    private List<Text> texts = new ArrayList<>();
 
     public User() {
+        // For JPA purposes
     }
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public void addLanguage(Language newLang) {
-        langs.add(newLang);
-    }
-
-    public void removeLanguage(Language lang) {
-        langs.remove(lang);
     }
 
     public int getId() {
@@ -106,19 +112,30 @@ public class User {
         this.langs = langs;
     }
 
+    public void addLanguage(Language newLang) {
+        langs.add(newLang);
+    }
+
+    public void removeLanguage(Language lang) {
+        langs.remove(lang);
+    }
+
     public Language getChosenLang() {
+        if (chosenLang == null) {
+            throw new NoChosenLanguageException("User '%s' hasn't chosen a language yet.".formatted(username));
+        }
         return chosenLang;
     }
 
-    public void setChosenLang(Language chosenLang) {
+    public void setChosenLang(@Nullable Language chosenLang) {
         this.chosenLang = chosenLang;
     }
 
-    public Language getNativeLang() {
+    public @Nullable Language getNativeLang() {
         return nativeLang;
     }
 
-    public void setNativeLang(Language nativeLang) {
+    public void setNativeLang(@Nullable Language nativeLang) {
         this.nativeLang = nativeLang;
     }
 
@@ -139,7 +156,7 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface WordRepository extends JpaRepository<Word, Long> {
+interface WordRepository extends JpaRepository<Word, Long> {
     Optional<Word> findByValueAndLanguageAndUser(String word, Language lang, User user);
 
     boolean existsByValueAndLanguageAndUser(String value, Language lang, User user);

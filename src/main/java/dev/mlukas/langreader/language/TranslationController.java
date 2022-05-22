@@ -4,7 +4,8 @@ import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import dev.mlukas.langreader.user.User;
-import dev.mlukas.langreader.user.UserRepository;
+import dev.mlukas.langreader.user.UserService;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,43 +14,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/translate")
 public class TranslationController {
-    private final LangRepository langRepository;
-    private final UserRepository userRepository;
+    private final LanguageService languageService;
+    private final UserService userService;
     // TODO: Can I move this into constructor?
     @Value("${langreader.app.googleApiKey}")
     private String googleApiKey;
 
-    public TranslationController(LangRepository langRepository, UserRepository userRepository) {
-        this.langRepository = langRepository;
-        this.userRepository = userRepository;
+    public TranslationController(LanguageService languageService, UserService userService) {
+        this.languageService = languageService;
+        this.userService = userService;
     }
 
     @GetMapping
     public ResponseEntity<String> getTranslation(@RequestParam(value = "word") String word) {
-        Optional<User> userOpt = userRepository.findByUsername(UserRepository.MARTIN);
-        if (userOpt.isPresent()) {
-            Language chosenLang = userOpt.get().getChosenLang();
-            if (chosenLang != null) {
-                @SuppressWarnings("deprecation") Translate translate = TranslateOptions.newBuilder()
-                        .setApiKey(googleApiKey).build().getService();
-                // for now, default is EN, and if chosen is EN, then translated to user's native
-                Language englishLang = langRepository.findByCode("EN");
-                Language targetLang = (chosenLang.getCode().equals("EN"))
-                        ? userOpt.get().getNativeLang()
-                        : englishLang;
+        User foundUser = userService.getUser(UserService.MARTIN);
+        Language chosenLang = foundUser.getChosenLang();
+        // For now, default is EN, and if chosen is EN, then translated to user's native
+        Language englishLang = languageService.getLanguage("EN");
+        @Nullable Language nativeLang = foundUser.getNativeLang();
+        Language targetLang = (chosenLang.getCode().equals("EN")) && nativeLang != null
+                ? nativeLang
+                : englishLang;
 
-                Translation translation = translate.translate(
-                        word,
-                        Translate.TranslateOption.sourceLanguage(chosenLang.getCode()),
-                        Translate.TranslateOption.targetLanguage(targetLang.getCode()));
-                return new ResponseEntity<>(translation.getTranslatedText().toLowerCase(), HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Translate translate = TranslateOptions.newBuilder().setApiKey(googleApiKey).build().getService();
+        Translation translation = translate.translate(
+                word,
+                Translate.TranslateOption.sourceLanguage(chosenLang.getCode()),
+                Translate.TranslateOption.targetLanguage(targetLang.getCode())
+        );
+        
+        return new ResponseEntity<>(translation.getTranslatedText().toLowerCase(), HttpStatus.OK);
     }
 }

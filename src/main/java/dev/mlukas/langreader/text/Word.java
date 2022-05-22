@@ -3,6 +3,7 @@ package dev.mlukas.langreader.text;
 import com.google.common.base.MoreObjects;
 import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.user.User;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.persistence.*;
 
@@ -11,26 +12,28 @@ import javax.persistence.*;
 public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private @Nullable Long id;
 
-    private String value;
+    private String value = "";
 
     @Enumerated
     @Column(columnDefinition = "int", name = "type_id")
-    private WordType type;
+    private @Nullable WordType type;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lang_id")
-    private Language language;
+    private @Nullable Language language;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private @Nullable User user;
 
+    @SuppressWarnings("unused")
     public Word() {
+        // For JPA purposes
     }
 
-    public Word(Long id, String value, WordType type, Language language, User user) {
+    public Word(@Nullable Long id, String value, WordType type, Language language, User user) {
         this.id = id;
         this.value = value;
         this.type = type;
@@ -38,7 +41,7 @@ public class Word {
         this.user = user;
     }
 
-    public Long getId() {
+    public @Nullable Long getId() {
         return id;
     }
 
@@ -54,7 +57,7 @@ public class Word {
         this.value = value;
     }
 
-    public WordType getType() {
+    public @Nullable WordType getType() {
         return type;
     }
 
@@ -62,7 +65,7 @@ public class Word {
         this.type = type;
     }
 
-    public Language getLanguage() {
+    public @Nullable Language getLanguage() {
         return language;
     }
 
@@ -70,7 +73,7 @@ public class Word {
         this.language = language;
     }
 
-    public User getUser() {
+    public @Nullable User getUser() {
         return user;
     }
 

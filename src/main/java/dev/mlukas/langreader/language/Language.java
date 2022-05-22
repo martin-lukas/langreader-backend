@@ -1,5 +1,7 @@
 package dev.mlukas.langreader.language;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -8,11 +10,11 @@ import java.util.Objects;
 public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String code;
-    private String fullName;
+    private @Nullable Integer id;
+    private String code = "";
+    private String fullName = "";
 
-    public int getId() {
+    public @Nullable Integer getId() {
         return id;
     }
 
@@ -37,11 +39,11 @@ public class Language {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Language language = (Language) o;
-        return id == language.id && Objects.equals(code, language.code) && Objects.equals(fullName, language.fullName);
+        return Objects.equals(id, language.id) && Objects.equals(code, language.code) && Objects.equals(fullName, language.fullName);
     }
 
     @Override

@@ -1,21 +1,15 @@
 package dev.mlukas.langreader.text;
 
 import com.google.common.base.MoreObjects;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Token {
-    public String value;
-    public WordType type;
+    private String value;
+    private @Nullable WordType type;
 
-    public Token() {
-    }
-
-    public Token(String value, WordType type) {
+    public Token(String value, @Nullable WordType type) {
         this.value = value;
         this.type = type;
-    }
-
-    public boolean isValid(boolean isTypeNeeded) {
-        return value != null && !value.isBlank() && (!isTypeNeeded || (WordType.isValid(type)));
     }
 
     public String getValue() {
@@ -26,7 +20,7 @@ public class Token {
         this.value = value;
     }
 
-    public WordType getType() {
+    public @Nullable WordType getType() {
         return type;
     }
 

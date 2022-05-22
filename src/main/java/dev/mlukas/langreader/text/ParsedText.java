@@ -2,11 +2,12 @@ package dev.mlukas.langreader.text;
 
 import com.google.common.base.MoreObjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParsedText {
-    private String title;
-    private List<List<Token>> paragraphs;
+    private String title = "";
+    private List<List<Token>> paragraphs = new ArrayList<>();
 
     public String getTitle() {
         return title;

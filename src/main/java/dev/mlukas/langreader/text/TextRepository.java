@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TextRepository extends JpaRepository<Text, Integer> {
+interface TextRepository extends JpaRepository<Text, Integer> {
     List<Text> findAllByUserAndLanguageOrderByIdDesc(User user, Language language);
 }
