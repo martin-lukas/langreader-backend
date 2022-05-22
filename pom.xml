@@ -28,7 +28,7 @@
         <google-cloud-translate.version>2.1.12</google-cloud-translate.version>
         <h2.version>1.4.200</h2.version>
         <nekohtml.version>1.9.22</nekohtml.version>
-        <postgresql.version>42.2.11</postgresql.version>
+        <postgresql.version>42.3.3</postgresql.version>
         <xerces.version>2.9.0</xerces.version>
     </properties>
 
