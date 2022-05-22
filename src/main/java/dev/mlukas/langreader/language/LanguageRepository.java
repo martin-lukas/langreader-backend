@@ -11,5 +11,5 @@ interface LanguageRepository extends JpaRepository<Language, Integer> {
 
     Optional<Language> findByCode(String code);
 
-    Optional<Language> findByCodeAndByFullName(String code, String fullName);
+    Optional<Language> findByCodeAndFullName(String code, String fullName);
 }

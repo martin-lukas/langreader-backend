@@ -27,7 +27,7 @@ public class LanguageService {
     }
 
     public Language getLanguageByCodeAndFullName(String code, String fullName) {
-        return languageRepository.findByCodeAndByFullName(code, fullName)
+        return languageRepository.findByCodeAndFullName(code, fullName)
                 .orElseThrow(() ->
                         new LanguageNotFoundException("The language with the code '%s' and full name '%s' doesn't exist.".formatted(code, fullName))
                 );
