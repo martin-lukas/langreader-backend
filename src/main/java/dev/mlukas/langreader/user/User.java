@@ -23,11 +23,11 @@ public class User {
     private String password;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "user_langs",
+            name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "lang_id")
-    )
-    private List<Language> langs;
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chosen_lang_id")
     private Language chosenLang;
@@ -79,6 +79,25 @@ public class User {
         this.password = password;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        if (roles.contains(role)) {
+            throw new UserAlreadyHasRoleException("User %s already has the role %s".formatted(username, role.getType().getName()));
+        }
+        roles.add(role);
+    }
+
+    public void removeRole(Role role) {
+        roles.remove(role);
+    }
+
     public List<Language> getLangs() {
         return langs;
     }
@@ -124,15 +143,12 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && username.equals(user.username) && password.equals(user.password)
-                && Objects.equals(langs, user.langs) && Objects.equals(chosenLang, user.chosenLang)
-                && Objects.equals(nativeLang, user.nativeLang) && Objects.equals(words, user.words)
-                && Objects.equals(texts, user.texts);
+        return id == user.id && username.equals(user.username) && password.equals(user.password) && roles.equals(user.roles) && Objects.equals(langs, user.langs) && Objects.equals(chosenLang, user.chosenLang) && Objects.equals(nativeLang, user.nativeLang) && words.equals(user.words) && texts.equals(user.texts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, langs, chosenLang, nativeLang, words, texts);
+        return Objects.hash(id, username, password, langs, roles, chosenLang, nativeLang, words, texts);
     }
 
     @Override
@@ -141,6 +157,7 @@ public class User {
                 .add("id", id)
                 .add("username", username)
                 .add("password", password)
+                .add("roles", roles)
                 .add("langs", langs)
                 .add("chosenLang", chosenLang)
                 .add("nativeLang", nativeLang)

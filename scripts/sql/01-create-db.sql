@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS word_types;
 
 CREATE TABLE roles (
     id INT PRIMARY KEY,
-    role_name VARCHAR(50) NOT NULL
+    role_type VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE langs (
