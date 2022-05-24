@@ -2,7 +2,7 @@
 
 \c langreader;
 
-INSERT INTO roles (id, role_name) VALUES (0, 'ROLE_USER'), (1, 'ROLE_ADMIN');
+INSERT INTO roles (id, role_type) VALUES (0, 'ROLE_USER'), (1, 'ROLE_ADMIN');
 
 INSERT INTO langs (code, full_name) VALUES
     ('AF', 'Afrikaans'),
