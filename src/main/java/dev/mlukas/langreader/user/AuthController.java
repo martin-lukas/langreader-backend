@@ -12,13 +12,13 @@ public class AuthController {
     private final UserService userService;
     private final RoleService roleService;
 
-    public AuthRestController(UserService userService, RoleService roleService) {
+    public AuthController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
 
-    @PostMapping("/signin")
-    public void authenticateUser(@Valid @RequestBody SigninRequest signinRequest) {
+    @PostMapping("/login")
+    public void authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         // TODO: Should this be empty?
     }
 
@@ -32,8 +32,14 @@ public class AuthController {
         // TODO: Encode the password with Spring Security
         User user = new User(signupRequest.username(), signupRequest.password());
         // Set user role as USER automatically, and admins can be made by hand
-        user.setRoles(Set.of(roleService.getRole(RoleType.USER)));
+        user.setRoles(Set.of(roleService.getRole(RoleType.ROLE_USER)));
         user.setNativeLang(signupRequest.nativeLang());
         userService.save(user);
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout() {
+        // LOGOUT authenticated user
     }
 }
