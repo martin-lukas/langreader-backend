@@ -1,13 +1,8 @@
 package dev.mlukas.langreader.user;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users")
@@ -22,35 +17,5 @@ public class UserController {
     public ActiveUserResponse getActiveUser() {
         User foundUser = userService.getUser(UserService.MARTIN);
         return new ActiveUserResponse(foundUser);
-    }
-
-    @GetMapping
-//    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllOrderedByUsername();
-        List<User> strippedUsers = new ArrayList<>();
-        for (User strippedUser : users) {
-            strippedUser.setWords(Collections.emptyList());
-            strippedUser.setTexts(Collections.emptyList());
-            strippedUser.setLangs(Collections.emptyList());
-            strippedUser.setChosenLang(null);
-            strippedUsers.add(strippedUser);
-        }
-        return new ResponseEntity<>(strippedUsers, HttpStatus.OK);
-    }
-
-    @DeleteMapping
-//    @PreAuthorize("hasRole('ADMIN')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeUserByUsername(@RequestBody String username) {
-        User foundUser = userService.getUser(username);
-        userService.delete(foundUser);
-    }
-
-    @DeleteMapping("/self")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeUserSelf(HttpServletRequest req) {
-        User foundUser = userService.getUser(UserService.MARTIN);
-        userService.delete(foundUser);
     }
 }
