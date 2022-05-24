@@ -131,7 +131,10 @@ public class User {
         this.chosenLang = chosenLang;
     }
 
-    public @Nullable Language getNativeLang() {
+    public Language getNativeLang() {
+        if (nativeLang == null) {
+            throw new IllegalStateException("User '%s' is invalid - doesn't have a native language.".formatted(username));
+        }
         return nativeLang;
     }
 
@@ -178,8 +181,6 @@ public class User {
                 .add("langs", langs)
                 .add("chosenLang", chosenLang)
                 .add("nativeLang", nativeLang)
-                .add("words", words)
-                .add("texts", texts)
                 .toString();
     }
 }

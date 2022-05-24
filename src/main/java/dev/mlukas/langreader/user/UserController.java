@@ -19,13 +19,9 @@ public class UserController {
     }
 
     @GetMapping("/active")
-    public User getActiveUser() {
-        // TODO: change impl to get info from cookie
+    public ActiveUserResponse getActiveUser() {
         User foundUser = userService.getUser(UserService.MARTIN);
-        foundUser.setTexts(Collections.emptyList());
-        foundUser.setWords(Collections.emptyList());
-        foundUser.setLangs(Collections.emptyList());
-        return foundUser;
+        return new ActiveUserResponse(foundUser);
     }
 
     @GetMapping
