@@ -13,7 +13,7 @@ public class RoleService {
     public Role getRole(RoleType type) {
         return roleRepository.findByType(type)
                 .orElseThrow(() ->
-                        new RoleNotFoundException("The role '%s' doesn't exist.".formatted(type.getName()))
+                        new RoleNotFoundException("The role '%s' doesn't exist.".formatted(type))
                 );
     }
 }

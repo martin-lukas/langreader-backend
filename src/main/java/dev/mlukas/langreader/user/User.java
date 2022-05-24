@@ -95,7 +95,7 @@ public class User {
 
     public void addRole(Role role) {
         if (roles.contains(role)) {
-            throw new UserAlreadyHasRoleException("User %s already has the role %s".formatted(username, role.getType().getName()));
+            throw new UserAlreadyHasRoleException("User %s already has the role %s".formatted(username, role.getType()));
         }
         roles.add(role);
     }

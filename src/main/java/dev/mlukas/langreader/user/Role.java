@@ -15,7 +15,7 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role_type")
-    private RoleType type = RoleType.USER;
+    private RoleType type = RoleType.ROLE_USER;
 
     public Role() {
         // For JPA purposes
@@ -37,8 +37,6 @@ public class Role {
         this.type = type;
     }
 
-
-
     @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
@@ -56,7 +54,7 @@ public class Role {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("id", id)
-                .add("name", type)
+                .add("type", type)
                 .toString();
     }
 }
