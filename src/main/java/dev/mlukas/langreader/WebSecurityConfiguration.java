@@ -28,22 +28,26 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors();
+        // Use CORS configuration defined in the bean below.
+        http.cors().and().csrf().disable();
 
-//        http.authorizeRequests()
-//                .antMatchers(
-//                        "/api/auth/**",
-//                        "/api/langs/all",
-//                        "/api/home").permitAll()
-//                .antMatchers(
-//                        "/api/words/**",
-//                        "/api/texts/**",
-//                        "/api/langs/**",
-//                        "/api/ext/**",
-//                        "/api/translate/**",
-//                        "/api/users/**", // restricted in the controller itself
-//                        "/api/stats/**").authenticated()
-//                .anyRequest().permitAll();
+        http.authorizeRequests()
+                .antMatchers(
+                        "/api/auth/login",
+                        "/api/auth/signup",
+                        "/api/langs/all" // for either sign-up page languages or language management
+                ).permitAll()
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers(
+                        "/api/auth/logout",
+                        "/api/users/**",
+                        "/api/texts/**",
+                        "/api/langs/**",
+                        "/api/words/**",
+                        "/api/translate/**",
+                        "/api/ext/**",
+                        "/api/stats/**"
+                ).hasRole("USER");
     }
 
     @Bean
@@ -55,10 +59,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             allowedOrigins.add(devServerUrl);
         }
         configuration.setAllowedOrigins(allowedOrigins);
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
