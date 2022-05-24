@@ -37,7 +37,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/auth/signup",
                         "/api/langs/all" // for either sign-up page languages or language management
                 ).permitAll()
-                .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .antMatchers(
                         "/api/auth/logout",
                         "/api/users/**",

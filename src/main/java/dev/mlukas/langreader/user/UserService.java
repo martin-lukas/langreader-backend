@@ -2,8 +2,6 @@ package dev.mlukas.langreader.user;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserService {
     // TODO: Remove after adding security
@@ -21,19 +19,11 @@ public class UserService {
                 );
     }
 
-    public List<User> getAllOrderedByUsername() {
-        return userRepository.findAllByOrderByUsername();
-    }
-
     public boolean exists(String username) {
         return userRepository.existsByUsername(username);
     }
 
     public void save(User user) {
         userRepository.save(user);
-    }
-
-    public void delete(User user) {
-        userRepository.delete(user);
     }
 }
