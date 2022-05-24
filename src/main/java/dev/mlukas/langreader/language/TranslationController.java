@@ -19,13 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class TranslationController {
     private final LanguageService languageService;
     private final UserService userService;
-    // TODO: Can I move this into constructor?
-    @Value("${langreader.app.googleApiKey}")
-    private String googleApiKey;
+    private final String googleApiKey;
 
-    public TranslationController(LanguageService languageService, UserService userService) {
+    public TranslationController(
+            LanguageService languageService,
+            UserService userService,
+            @Value("${langreader.app.googleApiKey}") String googleApiKey
+    ) {
         this.languageService = languageService;
         this.userService = userService;
+        this.googleApiKey = googleApiKey;
     }
 
     @GetMapping
