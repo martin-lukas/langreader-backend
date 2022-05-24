@@ -13,7 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/langs")
+@RequestMapping("/langs")
 public class LanguageController {
     private final UserService userService;
     private final LanguageService languageService;

@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/stats")
+@RequestMapping("/stats")
 public class StatisticsController {
     private final UserService userService;
     private final WordService wordService;

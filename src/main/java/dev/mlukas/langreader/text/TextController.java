@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/texts")
+@RequestMapping("/texts")
 public class TextController {
     private final TextService textService;
     private final UserService userService;

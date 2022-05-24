@@ -7,8 +7,8 @@ import javax.validation.Valid;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/auth")
-public class AuthRestController {
+@RequestMapping("/auth")
+public class AuthController {
     private final UserService userService;
     private final RoleService roleService;
 

@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @RestController
-@RequestMapping("/api/words")
+@RequestMapping("/words")
 public class WordController {
     private final UserService userService;
     private final WordService wordService;
