@@ -10,7 +10,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/words")
 public class WordController {
     private final UserService userService;

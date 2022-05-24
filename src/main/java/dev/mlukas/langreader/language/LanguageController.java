@@ -13,7 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/langs")
 public class LanguageController {
     private final UserService userService;

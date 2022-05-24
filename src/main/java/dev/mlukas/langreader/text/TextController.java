@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/texts")
 public class TextController {
     private final TextService textService;
