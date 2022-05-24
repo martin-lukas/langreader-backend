@@ -1,5 +1,7 @@
-gcloud compute scp ..\target\langreader-backend.jar ^
-        langreader-main:langreader-backend.jar ^
-        --zone "europe-west1-b" --project "enhanced-optics-350517"
+@ECHO OFF
 
-:: gcloud compute ssh --zone "europe-west1-b" "langreader-main" --project "enhanced-optics-350517"
+:: Build LangReader backend
+mvn clean package -f ..\pom.xml
+
+:: Upload it to PROD server
+scp -i PATH_TO_PRIVATE_KEY target\langreader-backend.jar USER@IP_ADDRESS:backend/
