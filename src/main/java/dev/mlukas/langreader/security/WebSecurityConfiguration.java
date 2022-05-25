@@ -1,10 +1,14 @@
-package dev.mlukas.langreader;
+package dev.mlukas.langreader.security;
 
+import dev.mlukas.langreader.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -14,16 +18,18 @@ import java.util.List;
 
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private final String prodServerUrl;
-    private final String devServerUrl;
+    @Autowired
+    private JsonBasicAuthenticationEntryPoint jsonAuthenticationEntryPoint;
+    @Autowired
+    private UserService userService;
+    @Value("${langreader.app.prod.server}")
+    private String prodServerUrl;
+    @Value("${langreader.app.dev.server}")
+    private String devServerUrl;
 
-    public WebSecurityConfiguration(
-            @Value("${langreader.app.prod.server}") String prodServerUrl,
-            @Value("${langreader.app.dev.server}") String devServerUrl
-    ) {
-        super();
-        this.prodServerUrl = prodServerUrl;
-        this.devServerUrl = devServerUrl;
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
     }
 
     @Override
@@ -38,7 +44,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/langs/all" // for either sign-up page languages or language management
                 ).permitAll()
                 .antMatchers(
-                        "/api/auth/logout",
                         "/api/users/**",
                         "/api/texts/**",
                         "/api/langs/**",
@@ -46,7 +51,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/translate/**",
                         "/api/ext/**",
                         "/api/stats/**"
-                ).hasRole("USER");
+                ).authenticated();
+
+        http.httpBasic().authenticationEntryPoint(jsonAuthenticationEntryPoint);
     }
 
     @Bean

@@ -14,19 +14,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/texts")
 public class TextController {
     private final TextService textService;
     private final UserService userService;
-    private final WordRepository wordRepository;
+    private final WordService wordService;
 
-    public TextController(TextService textService, UserService userService, WordRepository wordRepository) {
+    public TextController(TextService textService, UserService userService, WordService wordService) {
         this.textService = textService;
         this.userService = userService;
-        this.wordRepository = wordRepository;
+        this.wordService = wordService;
     }
 
     @GetMapping
@@ -112,9 +111,8 @@ public class TextController {
         parsedText.getParagraphs().forEach(paragraph -> paragraph.stream()
                 .filter(token -> token.getType() != null)
                 .forEach(token -> {
-                    Optional<Word> foundWord = wordRepository.findByValueAndLanguageAndUser(
-                            token.getValue().toLowerCase(), chosenLang, user);
-                    foundWord.ifPresent(word -> token.setType(word.getType()));
+                    Word foundWord = wordService.getWordBy(token.getValue().toLowerCase(), chosenLang, user);
+                    token.setType(foundWord.getType());
                 })
         );
 

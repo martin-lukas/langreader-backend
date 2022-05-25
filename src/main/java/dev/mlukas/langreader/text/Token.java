@@ -24,7 +24,7 @@ public class Token {
         return type;
     }
 
-    public void setType(WordType type) {
+    public void setType(@Nullable WordType type) {
         this.type = type;
     }
 

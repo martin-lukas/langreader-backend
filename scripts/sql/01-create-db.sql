@@ -11,19 +11,12 @@
 DROP TABLE IF EXISTS words;
 DROP TABLE IF EXISTS texts;
 
-DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS user_langs;
 
 DROP TABLE IF EXISTS users;
 
-DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS langs;
 DROP TABLE IF EXISTS word_types;
-
-CREATE TABLE roles (
-    id INT PRIMARY KEY,
-    role_type VARCHAR(50) NOT NULL
-);
 
 CREATE TABLE langs (
     id SERIAL PRIMARY KEY,
@@ -42,16 +35,9 @@ CREATE TABLE users (
     password VARCHAR(100) NOT NULL,
     native_lang_id INT NOT NULL,
     chosen_lang_id INT,
+    enabled boolean NOT NULL DEFAULT true,
     FOREIGN KEY (native_lang_id) REFERENCES langs (id),
     FOREIGN KEY (chosen_lang_id) REFERENCES langs (id)
-);
-
-CREATE TABLE user_roles (
-    user_id INT NOT NULL,
-    role_id INT NOT NULL,
-    PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
 CREATE TABLE user_langs (

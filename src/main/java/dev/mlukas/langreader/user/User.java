@@ -6,29 +6,25 @@ import dev.mlukas.langreader.language.NoChosenLanguageException;
 import dev.mlukas.langreader.text.Text;
 import dev.mlukas.langreader.text.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String username = "";
 
-    // Column names passwd to avoid clash with keyword
-    @Column(name = "passwd")
     private String password = "";
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "chosen_lang_id")
@@ -52,6 +48,8 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Text> texts = new ArrayList<>();
 
+    private boolean enabled = true;
+
     public User() {
         // For JPA purposes
     }
@@ -69,6 +67,7 @@ public class User {
         this.id = id;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
@@ -77,31 +76,13 @@ public class User {
         this.username = username;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void addRole(Role role) {
-        if (roles.contains(role)) {
-            throw new UserAlreadyHasRoleException("User %s already has the role %s".formatted(username, role.getType()));
-        }
-        roles.add(role);
-    }
-
-    public void removeRole(Role role) {
-        roles.remove(role);
     }
 
     public List<Language> getLangs() {
@@ -158,17 +139,49 @@ public class User {
         this.texts = texts;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    // METHODS FOR USERSERVICE
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public @Nullable Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    // ========================
+
     @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && username.equals(user.username) && password.equals(user.password) && roles.equals(user.roles) && Objects.equals(langs, user.langs) && Objects.equals(chosenLang, user.chosenLang) && Objects.equals(nativeLang, user.nativeLang) && words.equals(user.words) && texts.equals(user.texts);
+        return id == user.id && enabled == user.enabled && username.equals(user.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, langs, roles, chosenLang, nativeLang, words, texts);
+        return Objects.hash(id, username, password, enabled);
     }
 
     @Override
@@ -176,11 +189,10 @@ public class User {
         return MoreObjects.toStringHelper(this)
                 .add("id", id)
                 .add("username", username)
-                .add("password", password)
-                .add("roles", roles)
                 .add("langs", langs)
                 .add("chosenLang", chosenLang)
                 .add("nativeLang", nativeLang)
+                .add("enabled", enabled)
                 .toString();
     }
 }
