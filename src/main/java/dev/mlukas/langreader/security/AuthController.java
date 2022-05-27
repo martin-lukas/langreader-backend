@@ -5,6 +5,7 @@ import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,6 +29,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public void registerUser(@Valid @RequestBody SignupRequest signupRequest) {
         if (userService.userExists(signupRequest.username())) {
             throw new UsernameAlreadyExistsException("The username '%s' is unavailable.".formatted(signupRequest.username()));

@@ -9,6 +9,7 @@ import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.InputSource;
 
@@ -34,6 +35,7 @@ public class TextController {
     }
 
     @GetMapping
+    @Transactional
     public List<Text> getTextTitles(Principal principal) {
         User foundUser = userService.getUser(principal.getName());
 
@@ -63,6 +65,7 @@ public class TextController {
     }
 
     @GetMapping("/{textId}/parsed")
+    @Transactional
     public ParsedText getParsedText(@PathVariable int textId, Principal principal) {
         // TODO: Check that the user fetching the text owns it.
         User foundUser = userService.getUser(principal.getName());
@@ -89,6 +92,7 @@ public class TextController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public void addText(@Valid @RequestBody TextCreateRequest textCreateRequest, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
 
@@ -108,6 +112,7 @@ public class TextController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void updateText(@Valid @RequestBody TextUpdateRequest textUpdateRequest) {
         // TODO: Check that the user updating the text owns it.
         Text foundText = textService.getText(textUpdateRequest.id());

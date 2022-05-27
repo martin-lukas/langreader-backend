@@ -6,6 +6,7 @@ import dev.mlukas.langreader.text.WordType;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +27,7 @@ public class StatisticsController {
     }
 
     @GetMapping
+    @Transactional
     public List<LanguageStatistics> getStatistics(Principal principal) {
         User foundUser = userService.getUser(principal.getName());
 

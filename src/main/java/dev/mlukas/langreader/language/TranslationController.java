@@ -32,15 +32,18 @@ public class TranslationController {
     }
 
     @GetMapping
-    public ResponseEntity<String> getTranslation(@RequestParam(value = "word") String word) {
-        User foundUser = userService.getUser(UserService.MARTIN);
-        Language chosenLang = foundUser.getChosenLang();
-        // For now, default is EN, and if chosen is EN, then translated to user's native
-        Language englishLang = languageService.getLanguage("EN");
+    @Transactional
+    public String getTranslation(@RequestParam(value = "word") String word, Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
+
+        @Nullable Language chosenLang = foundUser.getChosenLang();
+        if (chosenLang == null) {
+            throw new NoChosenLanguageException(foundUser.getUsername());
+        }
+
         @Nullable Language nativeLang = foundUser.getNativeLang();
-        Language targetLang = (chosenLang.getCode().equals("EN")) && nativeLang != null
-                ? nativeLang
-                : englishLang;
+        // For now, default is EN, and if chosen is EN, then translated to user's native
+        Language targetLang = (chosenLang != Language.DEFAULT_LANGUAGE) ? Language.DEFAULT_LANGUAGE : nativeLang;
 
         Translate translate = TranslateOptions.newBuilder().setApiKey(googleApiKey).build().getService();
         Translation translation = translate.translate(
@@ -49,6 +52,6 @@ public class TranslationController {
                 Translate.TranslateOption.targetLanguage(targetLang.getCode())
         );
         
-        return new ResponseEntity<>(translation.getTranslatedText().toLowerCase(), HttpStatus.OK);
+        return translation.getTranslatedText().toLowerCase();
     }
 }

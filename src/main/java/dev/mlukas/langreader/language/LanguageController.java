@@ -6,6 +6,7 @@ import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,6 +36,7 @@ public class LanguageController {
     }
 
     @GetMapping
+    @Transactional
     public List<Language> getUserLangs(Principal principal) {
         User user = userService.getUser(principal.getName());
         return user.getLangs();
@@ -42,6 +44,7 @@ public class LanguageController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public void addUserLang(@Valid @RequestBody LanguageChangeRequest newLang, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
 
@@ -57,6 +60,7 @@ public class LanguageController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void removeUserLang(@RequestParam("id") int langId, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
 
@@ -66,20 +70,9 @@ public class LanguageController {
         userService.save(foundUser);
     }
 
-    @GetMapping("/chosen")
-    public Language getChosenLang(Principal principal) {
-        User foundUser = userService.getUser(principal.getName());
-
-        @Nullable Language chosenLang = foundUser.getChosenLang();
-        if (chosenLang == null) {
-            throw new NoChosenLanguageException(foundUser.getUsername());
-        }
-
-        return chosenLang;
-    }
-
     @PutMapping("/chosen")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void updateChosenLang(@Valid @RequestBody LanguageChangeRequest newChosenLang, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
         Language foundLanguage = languageService.getLanguageByCodeAndFullName(newChosenLang.code(), newChosenLang.fullName());

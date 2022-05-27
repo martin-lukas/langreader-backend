@@ -6,6 +6,7 @@ import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ public class WordController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public void addWord(@Valid @RequestBody TokenUpdateRequest token, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
 
@@ -46,6 +48,7 @@ public class WordController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void updateWord(@Valid @RequestBody TokenUpdateRequest tokenRequest, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
 
@@ -67,6 +70,7 @@ public class WordController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void deleteWord(@NotBlank @RequestParam("word") String value, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
 
