@@ -11,7 +11,7 @@
 
     <groupId>dev.mlukas.langreader</groupId>
     <artifactId>langreader</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <description>LangReader Backend</description>
 
