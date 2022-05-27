@@ -2,7 +2,6 @@ package dev.mlukas.langreader.user;
 
 import com.google.common.base.MoreObjects;
 import dev.mlukas.langreader.language.Language;
-import dev.mlukas.langreader.language.NoChosenLanguageException;
 import dev.mlukas.langreader.text.Text;
 import dev.mlukas.langreader.text.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -17,7 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -111,10 +110,7 @@ public class User implements UserDetails {
         langs.remove(lang);
     }
 
-    public Language getChosenLang() {
-        if (chosenLang == null) {
-            throw new NoChosenLanguageException("User '%s' hasn't chosen a language yet.".formatted(username));
-        }
+    public @Nullable Language getChosenLang() {
         return chosenLang;
     }
 
