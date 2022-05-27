@@ -1,5 +1,6 @@
 package dev.mlukas.langreader.security;
 
+import dev.mlukas.langreader.user.ActiveUserResponse;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ActiveUserResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        User foundUser = userService.getUser(loginRequest.username());
+        return new ActiveUserResponse(foundUser);
     }
 
     @PostMapping("/signup")
@@ -28,9 +30,8 @@ public class AuthController {
             throw new UsernameAlreadyExistsException("The username '%s' is unavailable.".formatted(signupRequest.username()));
         }
 
-        // TODO: Encode the password with Spring Security
         User user = new User(signupRequest.username(), signupRequest.password());
         user.setNativeLang(signupRequest.nativeLang());
-        userService.save(user);
+        userService.addUser(user);
     }
 }

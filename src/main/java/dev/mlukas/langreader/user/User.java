@@ -59,6 +59,16 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public User(String username, String password, boolean enabled) {
+        this.username = username;
+        this.password = password;
+        this.enabled = enabled;
+    }
+
+    public User(UserDetails userDetails) {
+        this(userDetails.getUsername(), userDetails.getPassword(), userDetails.isEnabled());
+    }
+
     public int getId() {
         return id;
     }
@@ -151,17 +161,17 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
@@ -189,9 +199,6 @@ public class User implements UserDetails {
         return MoreObjects.toStringHelper(this)
                 .add("id", id)
                 .add("username", username)
-                .add("langs", langs)
-                .add("chosenLang", chosenLang)
-                .add("nativeLang", nativeLang)
                 .add("enabled", enabled)
                 .toString();
     }

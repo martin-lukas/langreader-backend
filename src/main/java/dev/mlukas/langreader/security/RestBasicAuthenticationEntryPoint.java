@@ -8,10 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
-public class JsonBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+public class RestBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx) {
-        response.addHeader("WWW-Authenticate", "Basic realm=\"" + getRealmName() + "\"");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
