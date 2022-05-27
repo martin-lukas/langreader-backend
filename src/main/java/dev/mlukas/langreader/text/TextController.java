@@ -130,6 +130,7 @@ public class TextController {
 
     @PostMapping("/url")
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public void addTextFromUrl(@Valid @RequestBody TextFromUrlRequest textFromUrlRequest, Principal principal) {
         try {
             InputSource is = new InputSource();
