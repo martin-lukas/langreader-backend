@@ -3,8 +3,10 @@ package dev.mlukas.langreader.text;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import dev.mlukas.langreader.language.Language;
+import dev.mlukas.langreader.language.NoChosenLanguageException;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.InputSource;
@@ -12,6 +14,7 @@ import org.xml.sax.InputSource;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URL;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +32,15 @@ public class TextController {
     }
 
     @GetMapping
-    public List<Text> getTextTitles() {
-        User user = userService.getUser(UserService.MARTIN);
-        Language chosenLang = user.getChosenLang();
-        List<Text> texts = textService.getTextsBy(user, chosenLang);
+    public List<Text> getTextTitles(Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
+
+        @Nullable Language chosenLang = foundUser.getChosenLang();
+        if (chosenLang == null) {
+            throw new NoChosenLanguageException(foundUser.getUsername());
+        }
+
+        List<Text> texts = textService.getTextsBy(foundUser, chosenLang);
         List<Text> strippedTexts = new ArrayList<>();
         for (Text text : texts) {
             text.setText(null);
@@ -45,9 +53,7 @@ public class TextController {
 
     @GetMapping("/{textId}")
     public Text getText(@PathVariable int textId) {
-        // Check that the user exists, or throw an exception
-        userService.getUser(UserService.MARTIN);
-
+        // TODO: Check that the user fetching the text owns it.
         Text foundText = textService.getText(textId);
         foundText.setLanguage(null);
         foundText.setUser(null);
@@ -55,18 +61,40 @@ public class TextController {
     }
 
     @GetMapping("/{textId}/parsed")
-    public ParsedText getParsedText(@PathVariable int textId) {
-        User foundUser = userService.getUser(UserService.MARTIN);
+    public ParsedText getParsedText(@PathVariable int textId, Principal principal) {
+        // TODO: Check that the user fetching the text owns it.
+        User foundUser = userService.getUser(principal.getName());
+
+        if (foundUser.getChosenLang() == null) {
+            throw new NoChosenLanguageException(foundUser.getUsername());
+        }
+
+        Language chosenLang = foundUser.getChosenLang();
         Text foundText = textService.getText(textId);
         ParsedText parsedText = TextParser.parseText(foundText);
-        return enrichTextForUser(parsedText, foundUser);
+
+        // Enrich tokens in the text with user's marked types.
+        parsedText.getParagraphs().forEach(paragraph -> paragraph.stream()
+                .filter(token -> token.getType() != null)
+                .forEach(token -> {
+                    Word foundWord = wordService.getWordBy(token.getValue().toLowerCase(), chosenLang, foundUser);
+                    token.setType(foundWord.getType());
+                })
+        );
+
+        return parsedText;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addText(@Valid @RequestBody TextCreateRequest textCreateRequest) {
-        User foundUser = userService.getUser(UserService.MARTIN);
-        Language chosenLang = foundUser.getChosenLang();
+    public void addText(@Valid @RequestBody TextCreateRequest textCreateRequest, Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
+
+        @Nullable Language chosenLang = foundUser.getChosenLang();
+        if (chosenLang == null) {
+            throw new NoChosenLanguageException(foundUser.getUsername());
+        }
+
         textService.save(new Text(
                 null, // To force new text creation
                 textCreateRequest.title(),
@@ -79,6 +107,7 @@ public class TextController {
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateText(@Valid @RequestBody TextUpdateRequest textUpdateRequest) {
+        // TODO: Check that the user updating the text owns it.
         Text foundText = textService.getText(textUpdateRequest.id());
         foundText.setTitle(textUpdateRequest.title());
         foundText.setText(textUpdateRequest.text());
@@ -88,34 +117,21 @@ public class TextController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteText(@RequestParam("id") int textId) {
+        // TODO: Check that the user deleting the text owns it.
         textService.delete(textId);
     }
 
     @PostMapping("/url")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addTextFromUrl(@Valid @RequestBody TextFromUrlRequest textFromUrlRequest) {
+    public void addTextFromUrl(@Valid @RequestBody TextFromUrlRequest textFromUrlRequest, Principal principal) {
         try {
             InputSource is = new InputSource();
             is.setEncoding("UTF-8");
             is.setByteStream(new URL(textFromUrlRequest.url()).openStream());
             String text = ArticleExtractor.INSTANCE.getText(is);
-            addText(new TextCreateRequest(textFromUrlRequest.title(), text));
+            addText(new TextCreateRequest(textFromUrlRequest.title(), text), principal);
         } catch (IOException | BoilerpipeProcessingException e) {
             throw new TextFromUrlProcessingException(e);
         }
-    }
-
-    private ParsedText enrichTextForUser(ParsedText parsedText, User user) {
-        Language chosenLang = user.getChosenLang();
-
-        parsedText.getParagraphs().forEach(paragraph -> paragraph.stream()
-                .filter(token -> token.getType() != null)
-                .forEach(token -> {
-                    Word foundWord = wordService.getWordBy(token.getValue().toLowerCase(), chosenLang, user);
-                    token.setType(foundWord.getType());
-                })
-        );
-
-        return parsedText;
     }
 }

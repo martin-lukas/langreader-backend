@@ -12,10 +12,20 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
-    @ExceptionHandler({UsernameNotFoundException.class, NoChosenLanguageException.class})
+    @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessage userNotFound(RuntimeException exception) {
         return new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler({NoChosenLanguageException.class})
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorMessage noChosenLanguageYet(NoChosenLanguageException exception) {
+        return new ErrorMessage(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                "User '%s' hasn't chosen a language yet.".formatted(exception.getMessage()),
+                LocalDateTime.now()
+        );
     }
 
     @ExceptionHandler(TextNotFoundException.class)
