@@ -26,7 +26,6 @@
         <boilerpipe.version>1.1.0</boilerpipe.version>
         <checker-qual.version>3.22.0</checker-qual.version>
         <google-cloud-translate.version>2.1.13</google-cloud-translate.version>
-        <h2.version>2.1.212</h2.version>
         <nekohtml.version>1.9.22</nekohtml.version>
         <postgresql.version>42.3.4</postgresql.version>
         <xerces.version>2.9.0</xerces.version>
@@ -53,12 +52,6 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -102,11 +95,6 @@
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
