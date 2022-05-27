@@ -4,6 +4,7 @@ import dev.mlukas.langreader.user.ActiveUserResponse;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -12,9 +13,11 @@ import javax.validation.Valid;
 @RequestMapping("/auth")
 public class AuthController {
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/login")
@@ -30,7 +33,10 @@ public class AuthController {
             throw new UsernameAlreadyExistsException("The username '%s' is unavailable.".formatted(signupRequest.username()));
         }
 
-        User user = new User(signupRequest.username(), signupRequest.password());
+        User user = new User(
+                signupRequest.username(),
+                passwordEncoder.encode(signupRequest.password())
+        );
         user.setNativeLang(signupRequest.nativeLang());
         userService.addUser(user);
     }
