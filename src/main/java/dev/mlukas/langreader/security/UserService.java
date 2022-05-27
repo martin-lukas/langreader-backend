@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.user;
+package dev.mlukas.langreader.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

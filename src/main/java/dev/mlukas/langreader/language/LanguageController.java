@@ -2,9 +2,8 @@ package dev.mlukas.langreader.language;
 
 import dev.mlukas.langreader.ErrorMessage;
 import dev.mlukas.langreader.text.WordService;
-import dev.mlukas.langreader.user.User;
-import dev.mlukas.langreader.user.UserService;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import dev.mlukas.langreader.security.User;
+import dev.mlukas.langreader.security.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;

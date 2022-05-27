@@ -1,7 +1,7 @@
 package dev.mlukas.langreader.text;
 
 import dev.mlukas.langreader.language.Language;
-import dev.mlukas.langreader.user.User;
+import dev.mlukas.langreader.security.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.user;
+package dev.mlukas.langreader.security;
 
 import com.google.common.base.MoreObjects;
 import dev.mlukas.langreader.language.Language;

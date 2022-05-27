@@ -1,8 +1,5 @@
 package dev.mlukas.langreader.security;
 
-import dev.mlukas.langreader.user.ActiveUserResponse;
-import dev.mlukas.langreader.user.User;
-import dev.mlukas.langreader.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +19,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ActiveUserResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public LoggedInUser authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         User foundUser = userService.getUser(loginRequest.username());
-        return new ActiveUserResponse(foundUser);
+        return new LoggedInUser(foundUser);
     }
 
     @PostMapping("/signup")

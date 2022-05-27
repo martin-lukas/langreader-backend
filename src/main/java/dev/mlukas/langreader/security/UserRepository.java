@@ -1,4 +1,4 @@
-package dev.mlukas.langreader.user;
+package dev.mlukas.langreader.security;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
