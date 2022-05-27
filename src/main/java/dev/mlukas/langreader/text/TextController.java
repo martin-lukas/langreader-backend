@@ -2,6 +2,7 @@ package dev.mlukas.langreader.text;
 
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
+import dev.mlukas.langreader.ErrorMessage;
 import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.language.NoChosenLanguageException;
 import dev.mlukas.langreader.user.User;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URL;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,5 +135,11 @@ public class TextController {
         } catch (IOException | BoilerpipeProcessingException e) {
             throw new TextFromUrlProcessingException(e);
         }
+    }
+
+    @ExceptionHandler(TextNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage textNotFound(TextNotFoundException exception) {
+        return new ErrorMessage(HttpStatus.BAD_REQUEST, "The text with the given ID was not found.", LocalDateTime.now());
     }
 }

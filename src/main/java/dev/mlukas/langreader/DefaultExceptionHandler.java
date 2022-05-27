@@ -1,7 +1,6 @@
 package dev.mlukas.langreader;
 
 import dev.mlukas.langreader.language.NoChosenLanguageException;
-import dev.mlukas.langreader.text.TextNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,14 +22,8 @@ public class DefaultExceptionHandler {
     public ErrorMessage noChosenLanguageYet(NoChosenLanguageException exception) {
         return new ErrorMessage(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                "User '%s' hasn't chosen a language yet.".formatted(exception.getMessage()),
+                exception.getMessage(),
                 LocalDateTime.now()
         );
-    }
-
-    @ExceptionHandler(TextNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessage textNotFound(RuntimeException exception) {
-        return new ErrorMessage(HttpStatus.BAD_REQUEST, "The text with the given ID was not found.", LocalDateTime.now());
     }
 }

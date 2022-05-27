@@ -1,5 +1,6 @@
 package dev.mlukas.langreader.language;
 
+import dev.mlukas.langreader.ErrorMessage;
 import dev.mlukas.langreader.text.WordService;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -82,5 +85,17 @@ public class LanguageController {
     public Language getNativeLang(Principal principal) {
         User user = userService.getUser(principal.getName());
         return user.getNativeLang();
+    }
+
+    @ExceptionHandler(UserLanguageAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorMessage userLanguageAreadyExists(UserLanguageAlreadyExistsException exception) {
+        return new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(LanguageNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage languageNotFound(LanguageNotFoundException exception) {
+        return new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage(), LocalDateTime.now());
     }
 }
