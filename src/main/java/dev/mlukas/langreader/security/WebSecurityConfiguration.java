@@ -71,11 +71,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/stats/**"
                 ).authenticated();
 
-        http.cors().and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//                .anonymous().disable()
-                .httpBasic()
+        // Setup CORS
+        http.cors().and().csrf().disable();
+        // TODO: Setup CSRF properly
+        // http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        // Setup session management to stateless
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        // Setup HTTP Basic Authentication
+        http.httpBasic()
                 .authenticationEntryPoint(jsonAuthenticationEntryPoint).and()
                 .authenticationProvider(customAuthProvider());
     }
@@ -89,9 +92,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             allowedOrigins.add(devServerUrl);
         }
         configuration.setAllowedOrigins(allowedOrigins);
-        configuration.setAllowedMethods(List.of("*"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of(
+                "Accept",
+                "Access-Control-Request-Headers",
+                "Access-Control-Request-Method",
+                "Authorization",
+                "Content-Type",
+                "Origin",
+                "X-Requested-With",
+                "X-XSRF-TOKEN"
+        ));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

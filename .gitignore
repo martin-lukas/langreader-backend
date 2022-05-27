@@ -6,7 +6,7 @@
 /target
 
 # Sensitive files
-/scripts/sql/03-mock-data.sql
+#/sql-scripts/03-mock-data.sql
 /src/main/resources/application-dev.properties
 /src/main/resources/application-prod.properties
 /src/main/resources/translate-api-key.json
