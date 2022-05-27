@@ -79,9 +79,8 @@ public class LanguageController {
     }
 
     @GetMapping("/native")
-    public @Nullable Language getNativeLang() {
-        User user = userService.getUser(UserService.MARTIN);
-        // TODO: refactor to return exception instead of null
+    public Language getNativeLang(Principal principal) {
+        User user = userService.getUser(principal.getName());
         return user.getNativeLang();
     }
 }

@@ -31,7 +31,7 @@ public class User implements UserDetails{
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "native_lang_id")
-    private @Nullable Language nativeLang;
+    private Language nativeLang = Language.DEFAULT_LANGUAGE;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -119,13 +119,10 @@ public class User implements UserDetails{
     }
 
     public Language getNativeLang() {
-        if (nativeLang == null) {
-            throw new IllegalStateException("User '%s' is invalid - doesn't have a native language.".formatted(username));
-        }
         return nativeLang;
     }
 
-    public void setNativeLang(@Nullable Language nativeLang) {
+    public void setNativeLang(Language nativeLang) {
         this.nativeLang = nativeLang;
     }
 

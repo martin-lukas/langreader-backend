@@ -8,11 +8,25 @@ import java.util.Objects;
 @Entity
 @Table(name = "langs")
 public class Language {
+    public static final Language DEFAULT_LANGUAGE = new Language(14, "EN", "English");
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private @Nullable Integer id;
+
     private String code = "";
+
     private String fullName = "";
+
+    public Language() {
+        // For JPA purposes
+    }
+
+    public Language(@Nullable Integer id, String code, String fullName) {
+        this.id = id;
+        this.code = code;
+        this.fullName = fullName;
+    }
 
     public @Nullable Integer getId() {
         return id;
