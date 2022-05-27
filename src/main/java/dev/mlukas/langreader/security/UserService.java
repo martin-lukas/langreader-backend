@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements UserDetailsService {
-    // TODO: Remove after adding security
-    public static final String MARTIN = "martin";
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {

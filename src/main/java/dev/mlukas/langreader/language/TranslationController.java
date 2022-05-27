@@ -7,26 +7,24 @@ import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/translate")
 public class TranslationController {
-    private final LanguageService languageService;
     private final UserService userService;
     private final String googleApiKey;
 
     public TranslationController(
-            LanguageService languageService,
             UserService userService,
             @Value("${langreader.app.googleApiKey}") String googleApiKey
     ) {
-        this.languageService = languageService;
         this.userService = userService;
         this.googleApiKey = googleApiKey;
     }

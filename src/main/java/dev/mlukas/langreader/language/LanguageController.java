@@ -81,12 +81,6 @@ public class LanguageController {
         userService.save(foundUser);
     }
 
-    @GetMapping("/native")
-    public Language getNativeLang(Principal principal) {
-        User user = userService.getUser(principal.getName());
-        return user.getNativeLang();
-    }
-
     @ExceptionHandler(UserLanguageAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorMessage userLanguageAreadyExists(UserLanguageAlreadyExistsException exception) {
