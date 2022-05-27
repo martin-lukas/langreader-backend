@@ -6,7 +6,6 @@ import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,47 +35,55 @@ public class LanguageController {
     }
 
     @GetMapping
-    public List<Language> getUserLangs() {
-        User user = userService.getUser(UserService.MARTIN);
+    public List<Language> getUserLangs(Principal principal) {
+        User user = userService.getUser(principal.getName());
         return user.getLangs();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> addUserLang(@Valid @RequestBody LanguageChangeRequest newLang) {
-        User foundUser = userService.getUser(UserService.MARTIN);
+    public void addUserLang(@Valid @RequestBody LanguageChangeRequest newLang, Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
+
         Language foundLanguage = languageService.getLanguageByCodeAndFullName(newLang.code(), newLang.fullName());
         List<Language> usersLangs = foundUser.getLangs();
-        if (!usersLangs.contains(foundLanguage)) {
-            foundUser.addLanguage(foundLanguage);
-            userService.save(foundUser);
-            return new ResponseEntity<>("New user language added.", HttpStatus.OK);
+        if (usersLangs.contains(foundLanguage)) {
+            throw new UserLanguageAlreadyExistsException(foundUser.getUsername(), foundLanguage.getFullName());
         }
-        return new ResponseEntity<>("This user language is already added.", HttpStatus.BAD_REQUEST);
+
+        foundUser.addLanguage(foundLanguage);
+        userService.save(foundUser);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeUserLang(@RequestParam("id") int langId) {
-        User foundUser = userService.getUser(UserService.MARTIN);
-        Language lang = languageService.getLanguage(langId);
-        foundUser.removeLanguage(lang);
-        wordService.deleteAllByUserAndLanguage(foundUser, lang);
+    public void removeUserLang(@RequestParam("id") int langId, Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
+
+        Language userLang = languageService.getLanguage(langId);
+        foundUser.removeLanguage(userLang);
+        wordService.deleteAllByUserAndLanguage(foundUser, userLang);
         userService.save(foundUser);
     }
 
     @GetMapping("/chosen")
-    public @Nullable Language getChosenLang() {
-        User user = userService.getUser(UserService.MARTIN);
-        // TODO: refactor to return exception instead of null
-        return user.getChosenLang();
+    public Language getChosenLang(Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
+
+        @Nullable Language chosenLang = foundUser.getChosenLang();
+        if (chosenLang == null) {
+            throw new NoChosenLanguageException(foundUser.getUsername());
+        }
+
+        return chosenLang;
     }
 
     @PutMapping("/chosen")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateChosenLang(@Valid @RequestBody LanguageChangeRequest newChosenLang) {
-        User foundUser = userService.getUser(UserService.MARTIN);
+    public void updateChosenLang(@Valid @RequestBody LanguageChangeRequest newChosenLang, Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
         Language foundLanguage = languageService.getLanguageByCodeAndFullName(newChosenLang.code(), newChosenLang.fullName());
+
         foundUser.setChosenLang(foundLanguage);
         userService.save(foundUser);
     }
