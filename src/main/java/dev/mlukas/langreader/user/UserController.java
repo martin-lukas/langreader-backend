@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -14,8 +16,8 @@ public class UserController {
     }
 
     @GetMapping("/active")
-    public ActiveUserResponse getActiveUser() {
-        User foundUser = userService.getUser(UserService.MARTIN);
+    public ActiveUserResponse getActiveUser(Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
         return new ActiveUserResponse(foundUser);
     }
 }

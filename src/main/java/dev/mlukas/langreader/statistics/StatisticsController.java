@@ -5,12 +5,11 @@ import dev.mlukas.langreader.text.WordService;
 import dev.mlukas.langreader.text.WordType;
 import dev.mlukas.langreader.user.User;
 import dev.mlukas.langreader.user.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,8 +26,9 @@ public class StatisticsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LanguageStatistics>> getStatistics() {
-        User foundUser = userService.getUser(UserService.MARTIN);
+    public List<LanguageStatistics> getStatistics(Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
+
         List<LanguageStatistics> stats = new ArrayList<>();
         List<Language> userLangs = foundUser.getLangs();
         for (Language userLang : userLangs) {
@@ -40,6 +40,6 @@ public class StatisticsController {
             ));
         }
         stats.sort(Comparator.comparing(LanguageStatistics::knownCount).reversed());
-        return new ResponseEntity<>(stats, HttpStatus.OK);
+        return stats;
     }
 }
