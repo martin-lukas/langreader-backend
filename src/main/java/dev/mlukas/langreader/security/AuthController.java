@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,8 +20,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public LoggedInUser authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        User foundUser = userService.getUser(loginRequest.username());
+    public LoggedInUser authenticateUser(Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
         return new LoggedInUser(foundUser);
     }
 

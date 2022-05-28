@@ -54,11 +54,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(
-                        "/auth/login",
                         "/auth/signup",
                         "/langs/all" // for either sign-up page languages or language management
                 ).permitAll()
                 .antMatchers(
+                        "/auth/login",
                         "/users/**",
                         "/texts/**",
                         "/langs",
