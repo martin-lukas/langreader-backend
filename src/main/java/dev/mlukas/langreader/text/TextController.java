@@ -37,7 +37,7 @@ public class TextController {
     @Transactional
     public List<StrippedText> getTextTitles(Principal principal) {
         User foundUser = userService.getUser(principal.getName());
-        Language chosenLang = foundUser.getChosenLang();
+        Language chosenLang = foundUser.getChosenLangOrThrow();
         List<Text> texts = foundUser.getTexts();
         return texts.stream()
                 .filter(text -> text.getLanguage().equals(chosenLang))
@@ -56,7 +56,7 @@ public class TextController {
     public ParsedText getParsedText(@PathVariable int textId, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
         Text foundText = getPermittedTextOrThrow(textId, foundUser);
-        Language chosenLang = foundUser.getChosenLang();
+        Language chosenLang = foundUser.getChosenLangOrThrow();
 
         ParsedText parsedText = TextParser.parseText(foundText);
 
@@ -82,7 +82,7 @@ public class TextController {
     @Transactional
     public void addText(@Valid @RequestBody TextCreateRequest textCreateRequest, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
-        Language chosenLang = foundUser.getChosenLang();
+        Language chosenLang = foundUser.getChosenLangOrThrow();
 
         textService.save(new Text(
                 null, // To force new text creation

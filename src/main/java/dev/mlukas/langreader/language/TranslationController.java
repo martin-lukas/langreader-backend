@@ -5,7 +5,6 @@ import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import dev.mlukas.langreader.security.User;
 import dev.mlukas.langreader.security.UserService;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +33,8 @@ public class TranslationController {
     public String getTranslation(@RequestParam(value = "word") String word, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
 
-        @Nullable Language chosenLang = foundUser.getChosenLang();
-        if (chosenLang == null) {
-            throw new NoChosenLanguageException(foundUser.getUsername());
-        }
-
-        @Nullable Language nativeLang = foundUser.getNativeLang();
+        Language chosenLang = foundUser.getChosenLangOrThrow();
+        Language nativeLang = foundUser.getNativeLang();
         // For now, default is EN, and if chosen is EN, then translated to user's native
         Language targetLang = (chosenLang != Language.DEFAULT_LANGUAGE) ? Language.DEFAULT_LANGUAGE : nativeLang;
 

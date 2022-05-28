@@ -111,7 +111,11 @@ public class User implements UserDetails{
         langs.remove(lang);
     }
 
-    public Language getChosenLang() {
+    public @Nullable Language getChosenLang() {
+        return chosenLang;
+    }
+
+    public Language getChosenLangOrThrow() {
         if (chosenLang == null) {
             throw new NoChosenLanguageException(username);
         }

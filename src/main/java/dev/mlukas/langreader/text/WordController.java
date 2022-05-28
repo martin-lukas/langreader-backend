@@ -1,10 +1,8 @@
 package dev.mlukas.langreader.text;
 
 import dev.mlukas.langreader.language.Language;
-import dev.mlukas.langreader.language.NoChosenLanguageException;
 import dev.mlukas.langreader.security.User;
 import dev.mlukas.langreader.security.UserService;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -29,11 +27,7 @@ public class WordController {
     @Transactional
     public void addWord(@Valid @RequestBody TokenUpdateRequest token, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
-
-        @Nullable Language chosenLang = foundUser.getChosenLang();
-        if (chosenLang == null) {
-            throw new NoChosenLanguageException(foundUser.getUsername());
-        }
+        Language chosenLang = foundUser.getChosenLangOrThrow();
 
         String value = token.value();
         if (wordService.existBy(value, chosenLang, foundUser)) {
@@ -51,11 +45,7 @@ public class WordController {
     @Transactional
     public void updateWord(@Valid @RequestBody TokenUpdateRequest tokenRequest, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
-
-        @Nullable Language chosenLang = foundUser.getChosenLang();
-        if (chosenLang == null) {
-            throw new NoChosenLanguageException(foundUser.getUsername());
-        }
+        Language chosenLang = foundUser.getChosenLangOrThrow();
 
         String value = tokenRequest.value().toLowerCase();
         WordType newType = tokenRequest.type();
@@ -73,13 +63,9 @@ public class WordController {
     @Transactional
     public void deleteWord(@NotBlank @RequestParam("word") String value, Principal principal) {
         User foundUser = userService.getUser(principal.getName());
+        Language chosenLang = foundUser.getChosenLangOrThrow();
+        Word foundWord = wordService.getWordBy(value.toLowerCase(), chosenLang, foundUser);
 
-        @Nullable Language chosenLang = foundUser.getChosenLang();
-        if (chosenLang == null) {
-            throw new NoChosenLanguageException(foundUser.getUsername());
-        }
-
-        Word foundWord = wordService.getWordBy(value.toLowerCase(), foundUser.getChosenLang(), foundUser);
         wordService.delete(foundWord);
     }
 }
