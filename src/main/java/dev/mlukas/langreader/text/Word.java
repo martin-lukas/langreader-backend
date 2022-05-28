@@ -18,7 +18,7 @@ public class Word {
 
     @Enumerated
     @Column(columnDefinition = "int", name = "type_id")
-    private @Nullable WordType type;
+    private WordType type = WordType.UNKNOWN;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lang_id")
@@ -57,7 +57,7 @@ public class Word {
         this.value = value;
     }
 
-    public @Nullable WordType getType() {
+    public WordType getType() {
         return type;
     }
 

@@ -20,9 +20,6 @@ public class TextParser {
     }
 
     public static ParsedText parseText(Text text) {
-        if (text.getText() == null) {
-            throw new TextEmptyParsingException("Cannot parse empty text.");
-        }
         ParsedText parsedText = new ParsedText();
         parsedText.setTitle(text.getTitle());
         List<List<Token>> tokenizedParagraphs = text.getText().lines()

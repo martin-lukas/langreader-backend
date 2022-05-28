@@ -6,7 +6,6 @@ import dev.mlukas.langreader.ErrorMessage;
 import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.security.User;
 import dev.mlukas.langreader.security.UserService;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +64,7 @@ public class TextController {
                 paragraph -> paragraph.stream()
                         .filter(token -> token.getType() != null)
                         .forEach(token -> {
-                            @Nullable WordType foundWordType = wordService.getWordTypeBy(
+                            WordType foundWordType = wordService.getWordTypeBy(
                                     token.getValue().toLowerCase(),
                                     chosenLang,
                                     foundUser
