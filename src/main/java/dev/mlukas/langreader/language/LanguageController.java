@@ -1,6 +1,7 @@
 package dev.mlukas.langreader.language;
 
 import dev.mlukas.langreader.ErrorMessage;
+import dev.mlukas.langreader.text.TextService;
 import dev.mlukas.langreader.text.WordService;
 import dev.mlukas.langreader.security.User;
 import dev.mlukas.langreader.security.UserService;
@@ -19,11 +20,13 @@ import java.util.List;
 public class LanguageController {
     private final UserService userService;
     private final LanguageService languageService;
+    private final TextService textService;
     private final WordService wordService;
 
-    public LanguageController(UserService userService, LanguageService languageService, WordService wordService) {
+    public LanguageController(UserService userService, LanguageService languageService, TextService textService, WordService wordService) {
         this.userService = userService;
         this.languageService = languageService;
+        this.textService = textService;
         this.wordService = wordService;
     }
 
@@ -37,8 +40,20 @@ public class LanguageController {
     @GetMapping
     @Transactional
     public List<Language> getUserLangs(Principal principal) {
-        User user = userService.getUser(principal.getName());
-        return user.getLangs();
+        User foundUser = userService.getUser(principal.getName());
+        return foundUser.getLangs();
+    }
+
+    @PutMapping("/chosen")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void updateChosenLang(@Valid @RequestBody LanguageChangeRequest newChosenLang, Principal principal) {
+        User foundUser = userService.getUser(principal.getName());
+        Language foundLanguage = languageService.getLanguageByCodeAndFullName(newChosenLang.code(), newChosenLang.fullName());
+
+        foundUser.setChosenLang(foundLanguage);
+
+        userService.save(foundUser);
     }
 
     @PostMapping
@@ -54,6 +69,7 @@ public class LanguageController {
         }
 
         foundUser.addLanguage(foundLanguage);
+
         userService.save(foundUser);
     }
 
@@ -65,18 +81,8 @@ public class LanguageController {
 
         Language userLang = languageService.getLanguage(langId);
         foundUser.removeLanguage(userLang);
+        textService.deleteAllByUserAndLanguage(foundUser, userLang);
         wordService.deleteAllByUserAndLanguage(foundUser, userLang);
-        userService.save(foundUser);
-    }
-
-    @PutMapping("/chosen")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void updateChosenLang(@Valid @RequestBody LanguageChangeRequest newChosenLang, Principal principal) {
-        User foundUser = userService.getUser(principal.getName());
-        Language foundLanguage = languageService.getLanguageByCodeAndFullName(newChosenLang.code(), newChosenLang.fullName());
-
-        foundUser.setChosenLang(foundLanguage);
         userService.save(foundUser);
     }
 

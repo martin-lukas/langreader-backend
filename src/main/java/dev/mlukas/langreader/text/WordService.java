@@ -2,6 +2,7 @@ package dev.mlukas.langreader.text;
 
 import dev.mlukas.langreader.language.Language;
 import dev.mlukas.langreader.security.User;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +20,15 @@ public class WordService {
                                 "The word '%s' in language '%s' for the user '%s' doesn't exist.".formatted(value, lang, user.getUsername())
                         )
                 );
+    }
+
+    public @Nullable WordType getWordTypeBy(String value, Language lang, User user) {
+        try {
+            var foundWord = getWordBy(value, lang, user);
+            return foundWord.getType();
+        } catch (WordNotFoundException ex) {
+            return null;
+        }
     }
 
     public boolean existBy(String value, Language lang, User user) {

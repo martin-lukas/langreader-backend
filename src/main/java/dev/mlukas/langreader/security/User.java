@@ -2,6 +2,7 @@ package dev.mlukas.langreader.security;
 
 import com.google.common.base.MoreObjects;
 import dev.mlukas.langreader.language.Language;
+import dev.mlukas.langreader.language.NoChosenLanguageException;
 import dev.mlukas.langreader.text.Text;
 import dev.mlukas.langreader.text.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -110,11 +111,14 @@ public class User implements UserDetails{
         langs.remove(lang);
     }
 
-    public @Nullable Language getChosenLang() {
+    public Language getChosenLang() {
+        if (chosenLang == null) {
+            throw new NoChosenLanguageException(username);
+        }
         return chosenLang;
     }
 
-    public void setChosenLang(@Nullable Language chosenLang) {
+    public void setChosenLang(Language chosenLang) {
         this.chosenLang = chosenLang;
     }
 

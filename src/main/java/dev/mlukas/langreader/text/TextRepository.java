@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 interface TextRepository extends JpaRepository<Text, Integer> {
     List<Text> findAllByUserAndLanguageOrderByIdDesc(User user, Language language);
+
+    void deleteAllByUserAndLanguage(User user, Language language);
 }

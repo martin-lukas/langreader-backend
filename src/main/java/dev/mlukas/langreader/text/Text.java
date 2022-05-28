@@ -17,22 +17,21 @@ public class Text {
     private String title = "";
 
     // TODO: Rename field to content.
-    private @Nullable String text;
+    private String text = "";
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "lang_id")
-    private @Nullable Language language;
+    private Language language;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private @Nullable User user;
+    private User user;
 
-    @SuppressWarnings("unused")
     public Text() {
         // For JPA purposes
     }
 
-    public Text(@Nullable Integer id, String title, String text, @Nullable Language language, @Nullable User user) {
+    public Text(@Nullable Integer id, String title, String text, Language language, User user) {
         this.id = id;
         this.title = title;
         this.text = text;
@@ -56,27 +55,27 @@ public class Text {
         this.title = title;
     }
 
-    public @Nullable String getText() {
+    public String getText() {
         return text;
     }
 
-    public void setText(@Nullable String text) {
+    public void setText(String text) {
         this.text = text;
     }
 
-    public @Nullable Language getLanguage() {
+    public Language getLanguage() {
         return language;
     }
 
-    public void setLanguage(@Nullable Language language) {
+    public void setLanguage(Language language) {
         this.language = language;
     }
 
-    public @Nullable User getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(@Nullable User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

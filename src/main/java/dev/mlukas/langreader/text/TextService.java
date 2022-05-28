@@ -33,7 +33,11 @@ public class TextService {
         textRepository.save(text);
     }
 
-    public void delete(int id) {
-        textRepository.deleteById(id);
+    public void delete(Text text) {
+        textRepository.delete(text);
+    }
+
+    public void deleteAllByUserAndLanguage(User user, Language language) {
+        textRepository.deleteAllByUserAndLanguage(user, language);
     }
 }
