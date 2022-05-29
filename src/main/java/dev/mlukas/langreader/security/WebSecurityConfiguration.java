@@ -92,7 +92,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             allowedOrigins.add(devServerUrl);
         }
         configuration.setAllowedOrigins(allowedOrigins);
-        configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of(
                 "Accept",
                 "Access-Control-Request-Headers",
