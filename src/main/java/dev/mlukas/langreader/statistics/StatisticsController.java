@@ -1,17 +1,16 @@
 package dev.mlukas.langreader.statistics;
 
 import dev.mlukas.langreader.language.Language;
-import dev.mlukas.langreader.text.WordService;
-import dev.mlukas.langreader.text.WordType;
 import dev.mlukas.langreader.security.User;
 import dev.mlukas.langreader.security.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
+import dev.mlukas.langreader.text.WordService;
+import dev.mlukas.langreader.text.WordType;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -30,18 +29,15 @@ public class StatisticsController {
     @Transactional
     public List<LanguageStatistics> getStatistics(Principal principal) {
         User foundUser = userService.getUser(principal.getName());
-
-        List<LanguageStatistics> stats = new ArrayList<>();
         List<Language> userLangs = foundUser.getLangs();
-        for (Language userLang : userLangs) {
-            stats.add(new LanguageStatistics(
-                    userLang,
-                    wordService.countByTypeAndLanguageAndUser(WordType.KNOWN, userLang, foundUser),
-                    wordService.countByTypeAndLanguageAndUser(WordType.STUDIED, userLang, foundUser),
-                    wordService.countByTypeAndLanguageAndUser(WordType.IGNORED, userLang, foundUser)
-            ));
-        }
-        stats.sort(Comparator.comparing(LanguageStatistics::knownCount).reversed());
-        return stats;
+
+        return userLangs.stream()
+                .map(userLang -> new LanguageStatistics(
+                        userLang,
+                        wordService.countByTypeAndLanguageAndUser(WordType.KNOWN, userLang, foundUser),
+                        wordService.countByTypeAndLanguageAndUser(WordType.STUDIED, userLang, foundUser),
+                        wordService.countByTypeAndLanguageAndUser(WordType.IGNORED, userLang, foundUser)
+                )).sorted(Comparator.comparing(LanguageStatistics::knownCount).reversed())
+                .toList();
     }
 }
