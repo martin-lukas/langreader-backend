@@ -75,6 +75,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // TODO: Setup CSRF properly
         // http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         // Setup session management to stateless
+        // TODO: Move back to stateful BE and session cookie, for logouts?
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // Setup HTTP Basic Authentication
         http.httpBasic()
